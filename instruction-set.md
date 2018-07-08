@@ -8,13 +8,20 @@
 3. ***Optional*** Probability of angle change for "randomising" plant growth
 
 ### Instruction set
-	
-* 1 rotateX +
-* 2 rotateX -
-* 3 rotateY +
-* 4 rotateY -
-* 5 rotateZ +
-* 6 rotateY -
+
+An instruction set consists of an array of instructions, for instance:
+```
+F [X F Y]
+```
+
+* X rotateX +
+* A rotateX -
+
+* Y rotateY +
+* B rotateY -
+
+* Z rotateZ +
+* C rotateY -
 
 * F Forward
 

@@ -1,3 +1,0 @@
-exports.Branch = function() {
-    
-}

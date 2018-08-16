@@ -1,7 +1,7 @@
 version: "2"
 services:
   node:
-    image: "node:6"
+    image: "node:8"
     user: "node"
     working_dir: /home/ruth/dev/tree.js
     environment:

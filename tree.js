@@ -1,6 +1,8 @@
 require('./state.js')
 require('./branch.js')
 
+import { Vector, Line} from 'vanilla-vectors-3d'
+
 const angle = 25
 const forwardMovement = 10
 const iterations = 3

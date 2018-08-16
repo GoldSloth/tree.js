@@ -2,9 +2,10 @@
   "name": "tree.js",
   "version": "1.0.0",
   "description": "Random generation of botanical features for use in 3D or 2D space",
-  "main": "test-tree.js",
+  "main": "tree.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test-tree.js",
+    "start": "node test-tree.js"
   },
   "repository": {
     "type": "git",

@@ -22,8 +22,10 @@ function applyRules(letter) {
 }
 
 exports.Tree2D = function() {
-    console.log('Tree2D created')
     this.type = 'Tree2D'
+    this.instructions = ['No instructions set']
+    this.branches = []
+
     this.makeTree = function() {
         var tree = axiom
         for (i=0;i<iterations;i++) {
@@ -34,7 +36,7 @@ exports.Tree2D = function() {
     }
 }
 
-exports.Tree3D = function() {
-    console.log('Tree3D created')
-    this.type = 'Tree3D'
-}
+// exports.Tree3D = function() {
+//     console.log('Tree3D created')
+//     this.type = 'Tree3D'
+// }

@@ -2,6 +2,7 @@ require('./state.js')
 require('./branch.js')
 
 import { Vector, Line} from 'vanilla-vectors-3d'
+import { State } from './state.js';
 
 const angle = 25
 const forwardMovement = 10
@@ -26,13 +27,42 @@ exports.Tree2D = function() {
     this.instructions = ['No instructions set']
     this.branches = []
 
-    this.makeTree = function() {
+    this.makeInstructions = function() {
         var tree = axiom
         for (i=0;i<iterations;i++) {
             tree = tree.map(applyRules).map(x => x.split(''))
             tree = [].concat.apply([], tree)
         }
         this.instructions = tree
+    }
+
+    this.makeBranches = function() {
+        var currentState = new State(new Vector(0,0,0), 0)
+        var stateStack = []
+
+        this.instructions.forEach(function(instruction) {
+            switch(instruction) {
+                case 'F':
+                var newPosition = new Vector(currentState.position.x + (forwardMovement * Math.sin(currentState.direction)),
+                currentState.position.y + (forwardMovement * Math.cos(currentState.direction)),0)
+                this.branches.push(currentState.position, newPosition)
+                currentState.position = newPosition
+                break
+                case '+':
+                currentState.direction+=angle
+                break
+                case '-':
+                currentState.direction-=angle
+                break
+                case '[':
+                stateStack.push(currentState)
+                break
+                case ']' :
+                currentState = stateStack.pop()
+                break
+            }
+        });
+
     }
 }
 

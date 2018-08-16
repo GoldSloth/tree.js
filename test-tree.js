@@ -13,4 +13,6 @@ function logWrite(message) {
 
 var testTree2D = new TC.Tree2D()
 
-logWrite(testTree2D.makeTree())
+testTree2D.makeTree()
+
+logWrite('Tree Instructions: '+testTree2D.instructions)

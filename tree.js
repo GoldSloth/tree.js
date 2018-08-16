@@ -24,7 +24,7 @@ exports.Tree2D = function() {
             tree = tree.map(applyRules).map(x => x.split(''))
             tree = [].concat.apply([], tree)
         }
-        return tree
+        this.instructions = tree
     }
 }
 

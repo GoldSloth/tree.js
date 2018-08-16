@@ -9,6 +9,9 @@ function applyRules(letter) {
         if (letter === key) {
             return value
         }
+        else {
+            return letter
+        }
     }
 }
 
@@ -18,7 +21,9 @@ exports.Tree2D = function() {
     this.makeTree = function() {
         var tree = axiom
         for (i=0;i<iterations;i++) {
-            tree = tree.map(applyRules).map(x => x.split('')).flat()
+            tree = tree.map(applyRules)
+            tree = tree.map(x => x.split(''))
+            tree = [].concat.apply([], tree)
         }
         return tree
     }

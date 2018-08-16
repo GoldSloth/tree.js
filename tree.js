@@ -1,3 +1,6 @@
+require('./state.js')
+require('./branch.js')
+
 const angle = 25
 const forwardMovement = 10
 const iterations = 3

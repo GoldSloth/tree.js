@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/GolddolphinSKB-Fexcraftian/tree.js/issues"
   },
-  "homepage": "https://github.com/GolddolphinSKB-Fexcraftian/tree.js#readme"
+  "homepage": "https://github.com/GolddolphinSKB-Fexcraftian/tree.js#readme",
+  "dependencies": {
+    "vanilla-vectors-3d": "^1.0.1"
+  }
 }

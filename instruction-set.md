@@ -21,7 +21,7 @@ F [X F Y]
 * B rotateY -
 
 * Z rotateZ +
-* C rotateY -
+* C rotateZ -
 
 * F Forward
 

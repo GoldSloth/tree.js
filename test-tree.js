@@ -8,10 +8,9 @@ function logWrite(message) {
     }
 
     console.log("Written to log");
-    }); 
+    });
 }
 
-var testTree3D = new TC.Tree3D()
 var testTree2D = new TC.Tree2D()
 
-logWrite('Stick stick stick')
+logWrite(testTree2D.makeTree())

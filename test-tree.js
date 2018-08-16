@@ -1,4 +1,5 @@
 var fs = require('fs')
+var TC = require('./tree.js')
 
 function logWrite(message) {
     fs.writeFile("tree-log.log", message, function(err) {
@@ -9,8 +10,6 @@ function logWrite(message) {
     console.log("Written to log");
     }); 
 }
-
-var TC = require('./tree.js')
 
 var testTree3D = new TC.Tree3D()
 var testTree2D = new TC.Tree2D()

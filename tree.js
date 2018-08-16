@@ -1,4 +1,5 @@
 const angle = 25
+const forwardMovement = 10
 const iterations = 3
 const axiom = ['X']
 const rules = {'X':'F+[[X]-X]-F[-FX]+X', 'F':'FF'}

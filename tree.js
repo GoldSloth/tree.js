@@ -1,6 +1,5 @@
-require('./state.js')
-require('./branch.js')
-require('vanilla-vectors-3d')
+const ST = require('./state.js')
+const vv3 = require('vanilla-vectors-3d')
 
 const angle = 25
 const forwardMovement = 10
@@ -35,13 +34,13 @@ exports.Tree2D = function() {
     }
 
     this.makeBranches = function() {
-        var currentState = new State(new Vector(0,0,0), 0)
+        var currentState = new ST.State(new vv3.Vector(0,0,0), 0)
         var stateStack = []
 
         this.instructions.forEach(function(instruction) {
             switch(instruction) {
                 case 'F':
-                var newPosition = new Vector(currentState.position.x + (forwardMovement * Math.sin(currentState.direction)),
+                var newPosition = new vv3.Vector(currentState.position.x + (forwardMovement * Math.sin(currentState.direction)),
                 currentState.position.y + (forwardMovement * Math.cos(currentState.direction)),0)
                 this.branches.push(currentState.position, newPosition)
                 currentState.position = newPosition

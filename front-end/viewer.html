@@ -35,11 +35,16 @@
                 linecap: 'round',
                 linejoin:  'round'
             });
+                       
+            var geometry = new THREE.Geometry();
             
             branches.forEach(function(line) {
-                
+                geometry.vertices.push(new THREE.Vector3(line.l.x, line.l.y, line.l.z))
+                geometry.vertices.push(new THREE.Vector3(line.l0.x, line.l0.y, line.l0.z))
             })
             
+            var lineTree = new THREE.Line(geometry, material);
+            scene.add(lineTree);
             
             function nextFrame() {
 

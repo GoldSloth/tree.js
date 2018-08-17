@@ -16,4 +16,4 @@ var testTree2D = new TC.Tree2D()
 testTree2D.makeInstructions()
 testTree2D.makeBranches()
 
-logWrite('Tree Instructions: ' + testTree2D.instructions + '\n' + 'branches' + testTree2D.branches.toString())
+logWrite('Tree Instructions: ' + testTree2D.instructions + '\n' + 'Branches: ' + testTree2D.branches)

@@ -36,27 +36,30 @@ exports.Tree2D = function() {
     this.makeBranches = function() {
         var currentState = new ST.State(new vv3.Vector(0,0,0), 0)
         var stateStack = []
-
         this.instructions.forEach(function(instruction) {
             switch(instruction) {
                 case 'F':
-                var newPosition = new vv3.Vector(currentState.position.x + (forwardMovement * Math.sin(currentState.direction)),
-                currentState.position.y + (forwardMovement * Math.cos(currentState.direction)),0)
-                this.branches.push(currentState.position, newPosition)
-                currentState.position = newPosition
-                break
+                    console.log(this.branches)
+                    var newPosition = new vv3.Vector(currentState.position.x + (forwardMovement * Math.sin(currentState.direction)), currentState.position.y + (forwardMovement * Math.cos(currentState.direction)),0)
+                    this.branches.push(currentState.position, newPosition)
+                    currentState.position = newPosition
+                    break
+                    
                 case '+':
-                currentState.direction+=angle
-                break
+                    currentState.direction+=angle
+                    break
+                    
                 case '-':
-                currentState.direction-=angle
-                break
+                    currentState.direction-=angle
+                    break
+                    
                 case '[':
-                stateStack.push(currentState)
-                break
+                    stateStack.push(currentState)
+                    break
+                    
                 case ']' :
-                currentState = stateStack.pop()
-                break
+                    currentState = stateStack.pop()
+                    break
             }
         });
 

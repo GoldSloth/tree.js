@@ -5,7 +5,7 @@
   "main": "tree.js",
   "scripts": {
     "test": "node test-tree.js",
-    "start": "npm install vanilla-vectors-3d && node ./back-end/test-tree.js"
+    "start": "node ./back-end/test-tree.js"
   },
   "repository": {
     "type": "git",

@@ -1,8 +1,5 @@
 *.log
-package-lock.json
-node_modules/
-docker-compose.yml
+node_modules
 logs.txt
 tree-log.log
 test-tree.json
-Dockerfile

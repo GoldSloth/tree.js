@@ -5,3 +5,4 @@ docker-compose.yml
 logs.txt
 tree-log.log
 test-tree.json
+Dockerfile

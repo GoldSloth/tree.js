@@ -1,8 +1,8 @@
 const fs = require('fs')
 const TC = require('./tree.js')
 
-function logWrite(message) {
-    fs.writeFile("tree-log.json", message, function(err) {
+function logWrite(message, filename) {
+    fs.writeFile(filename, message, function(err) {
     if(err) {
         return console.log(err);
     }
@@ -16,6 +16,6 @@ var testTree2D = new TC.Tree2D()
 testTree2D.makeInstructions()
 testTree2D.makeBranches()
 
-// logWrite('Tree Instructions: ' + testTree2D.instructions + '\n' + 'Branches: ' + testTree2D.branches)
+logWrite('Tree Instructions: ' + testTree2D.instructions + '\n' + 'Branches: ' + testTree2D.branches, 'tree-log.log')
 
-logWrite(JSON.stringify(testTree2D.branches))
+logWrite(JSON.stringify(testTree2D.branches), 'test-tree.json')

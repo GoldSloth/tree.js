@@ -9,6 +9,7 @@
 		</style>
 	</head>
 	<body>
+        <script src='../test-tree.json'></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/95/three.min.js"></script>
         <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
 		<script>
@@ -21,33 +22,36 @@
             
             var controls = new THREE.OrbitControls( camera );
 
-            camera.position.set(0, 20, 100);
+            camera.position.set(0, 0, 100);
             controls.update();
             
-            var light = new THREE.AmbientLight(0x404040); // soft white light
+            var light = new THREE.AmbientLight(0xffffff);
             scene.add(light);
-            
-            var branches = []
             
             var material = new THREE.LineBasicMaterial( {
                 color: 0xffffff, 
-                linewidth: 3,
-                linecap: 'round',
-                linejoin:  'round'
             });
-                       
-            var geometry = new THREE.Geometry();
+            
+            var geom = new THREE.BoxBufferGeometry(1, 1, 1);
+            var mat = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+            var cube = new THREE.Mesh( geom, mat );
+            scene.add( cube );
+        
+            var lineTreeGroup = new THREE.Group()
             
             branches.forEach(function(line) {
-                geometry.vertices.push(new THREE.Vector3(line.l.x, line.l.y, line.l.z))
-                geometry.vertices.push(new THREE.Vector3(line.l0.x, line.l0.y, line.l0.z))
+                var geom = new THREE.Geometry()
+                geom.vertices.push(new THREE.Vector3(line.l0.x, line.l0.y, line.l0.z))
+                geom.vertices.push(new THREE.Vector3(line.l.x, line.l.y, line.l.z))
+                
+                var singleLine = new THREE.Line(geom, material)
+                lineTreeGroup.add(singleLine)
+                
             })
-            
-            var lineTree = new THREE.Line(geometry, material);
-            scene.add(lineTree);
+        
+            scene.add(lineTreeGroup)
             
             function nextFrame() {
-
                 requestAnimationFrame(nextFrame);
 
                 controls.update();
@@ -55,6 +59,8 @@
                 renderer.render(scene, camera);
 
             }
+            
+            nextFrame()
 		</script>
 	</body>
 </html>

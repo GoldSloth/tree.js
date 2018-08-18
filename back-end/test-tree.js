@@ -18,4 +18,4 @@ testTree2D.makeBranches()
 
 logWrite('Tree Instructions: ' + testTree2D.instructions + '\n' + 'Branches: ' + testTree2D.branches, 'tree-log.log')
 
-logWrite(JSON.stringify(testTree2D.branches), 'test-tree.json')
+logWrite('var branches = ' + JSON.stringify(testTree2D.branches), 'test-tree.json')

@@ -40,6 +40,8 @@ exports.Tree2D = function() {
         this.instructions.forEach(function(instruction) {
             switch(instruction) {
                 case 'F':
+                    
+                    
                     var newPosition = new vv3.Vector(currentState.position.x + (forwardMovement * Math.sin(currentState.direction)), currentState.position.y + (forwardMovement * Math.cos(currentState.direction)),0)
                     branches.push(new vv3.Line(currentState.position, newPosition))
                     currentState.position = newPosition

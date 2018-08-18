@@ -2,21 +2,21 @@ const ST = require('./state.js')
 const vv3 = require('vanilla-vectors-3d')
 
 const angle = 25
-const forwardMovement = 10
-const iterations = 3
+const forwardMovement = 1
+const iterations = 6
 const axiom = ['X']
 const rules = {'X':'F+[[X]-X]-F[-FX]+X', 'F':'FF'}
 
 function applyRules(letter) {
-    for (var key in rules) {
-        var value = rules[key]
-        if (letter === key) {
-            return value
-        }
-        else {
-            return letter
-        }
+    if(letter in rules) {
+        return rules[letter]
+    } else {
+        return letter
     }
+}
+
+function toRadians (angle) {
+    return angle * (Math.PI / 180);
 }
 
 exports.Tree2D = function() {
@@ -35,18 +35,23 @@ exports.Tree2D = function() {
 
     this.makeBranches = function() {
         var currentState = new ST.State(new vv3.Vector(0,0,0), 0)
+        var stateToStore = new ST.State(new vv3.Vector(0,0,0), 0)
         var stateStack = []
         var branches = []
+        var rDirection
+        var x
+        var y
+        var newPosition
         this.instructions.forEach(function(instruction) {
             switch(instruction) {
                 case 'F':
-                    
-                    
-                    var newPosition = new vv3.Vector(currentState.position.x + (forwardMovement * Math.sin(currentState.direction)), currentState.position.y + (forwardMovement * Math.cos(currentState.direction)),0)
+                    rDirection = toRadians(currentState.direction)
+                    x = currentState.position.x + (forwardMovement * Math.sin(rDirection))
+                    y = currentState.position.y + (forwardMovement * Math.cos(rDirection))
+                    newPosition = new vv3.Vector(x, y, 0)
                     branches.push(new vv3.Line(currentState.position, newPosition))
                     currentState.position = newPosition
-                    break
-                    
+                    break    
                 case '+':
                     currentState.direction+=angle
                     break
@@ -56,7 +61,8 @@ exports.Tree2D = function() {
                     break
                     
                 case '[':
-                    stateStack.push(currentState)
+                    stateToStore = new ST.State(new vv3.Vector(currentState.position.x,currentState.position.y,currentState.position.z), currentState.direction)
+                    stateStack.push(stateToStore)
                     break
                     
                 case ']' :
@@ -67,6 +73,7 @@ exports.Tree2D = function() {
         this.branches = branches
     }
 }
+
 
 // exports.Tree3D = function() {
 //     console.log('Tree3D created')

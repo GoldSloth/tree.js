@@ -42,7 +42,7 @@
             branches.forEach(function(line) {
                 var geom = new THREE.Geometry()
                 geom.vertices.push(new THREE.Vector3(line.l0.x, line.l0.y, line.l0.z))
-                geom.vertices.push(new THREE.Vector3(line.l.x, line.l.y, line.l.z))
+                geom.vertices.push(new THREE.Vector3(line.lPrime.x, line.lPrime.y, line.lPrime.z))
                 
                 var singleLine = new THREE.Line(geom, material)
                 lineTreeGroup.add(singleLine)

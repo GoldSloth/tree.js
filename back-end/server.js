@@ -1,3 +1,8 @@
+const TC = require('./tree.js')
+tree = new TC.Tree2D()
+tree.makeInstructions()
+tree.makeBranches()
+
 const http = require('http');
 const { Tree2D } = require('./tree');
 
@@ -12,5 +17,5 @@ testTree2D.makeBranches()
   res.end("window.branches = " + JSON.stringify(testTree2D.branches))
 });
 server.listen(port, hostname, function() {
-  console.log('Server running at http://'+ hostname + ':' + port + '/');
+    console.log('Server running at http://'+ hostname + ':' + port + '/');
 });

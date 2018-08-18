@@ -2,10 +2,10 @@
   "name": "tree.js",
   "version": "1.0.0",
   "description": "Random generation of botanical features for use in 3D or 2D space",
-  "main": "tree.js",
+  "main": "server.js",
   "scripts": {
-    "test": "node test-tree.js",
-    "start": "node ./back-end/test-tree.js"
+    "start": "node ./back-end/server.js",
+    "dev": "nodemon ./back-end/server.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +18,10 @@
   },
   "homepage": "https://github.com/GolddolphinSKB-Fexcraftian/tree.js#readme",
   "dependencies": {
-    "vanilla-vectors-3d": "^1.0.1"
+    "vanilla-vectors-3d": "^1.0.1",
+    "body-parser": "^1.15.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
   }
 }

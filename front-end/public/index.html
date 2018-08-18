@@ -14,7 +14,9 @@
             var xmlhttp = new XMLHttpRequest()
             xmlhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
+                    console.log(JSON.parse(this.responseText))
                     window.branches = JSON.parse(this.responseText)
+                    drawBranchesWhenReady()
                 }
             }
             xmlhttp.open("POST", "http://localhost:3001/", true)
@@ -52,19 +54,19 @@
             scene.add( cube );
         
             var lineTreeGroup = new THREE.Group()
+            function drawBranchesWhenReady() {
+                branches.forEach(function(line) {
+                    var geom = new THREE.Geometry()
+                    geom.vertices.push(new THREE.Vector3(line.l0.x, line.l0.y, line.l0.z))
+                    geom.vertices.push(new THREE.Vector3(line.lPrime.x, line.lPrime.y, line.lPrime.z))
+                    
+                    var singleLine = new THREE.Line(geom, material)
+                    lineTreeGroup.add(singleLine)
+                    
+                })
             
-            branches.forEach(function(line) {
-                var geom = new THREE.Geometry()
-                geom.vertices.push(new THREE.Vector3(line.l0.x, line.l0.y, line.l0.z))
-                geom.vertices.push(new THREE.Vector3(line.lPrime.x, line.lPrime.y, line.lPrime.z))
-                
-                var singleLine = new THREE.Line(geom, material)
-                lineTreeGroup.add(singleLine)
-                
-            })
-        
-            scene.add(lineTreeGroup)
-            
+                scene.add(lineTreeGroup)
+            }
             function nextFrame() {
                 requestAnimationFrame(nextFrame);
 

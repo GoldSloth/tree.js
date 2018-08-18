@@ -48,7 +48,7 @@ exports.Tree2D = function(axiom, rules, iterations, angle, forwardMovement) {
         var x
         var y
         var newPosition
-        this.instructions.forEach(function(instruction){
+        this.instructions.forEach(function(instruction) {
             switch(instruction) {
                 case 'F':
                     rDirection = toRadians(currentState.direction)

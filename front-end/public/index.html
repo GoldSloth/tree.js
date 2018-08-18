@@ -20,7 +20,7 @@
             }
             xmlhttp.open("POST", "http://localhost:3001/", true)
             xmlhttp.setRequestHeader("Content-Type", "application/json")
-            const treeConfig = {angle:25, forwardMovement: 1, iterations: 6, axiom: ['X'], rules: {'X':'F+[[X]z-X]-F[-FX]c+X','F':'FF',}}
+            const treeConfig = {angle:25, forwardMovement: 1, iterations: 6, axiom: ['X'], rules: {'X':'F+[zt[X]uz-X]-F[-FX]uc+Xt','F':'FF',}}
             xmlhttp.send(JSON.stringify(treeConfig))
         }
         getBranches()

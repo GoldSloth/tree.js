@@ -89,6 +89,12 @@ exports.Tree = function(axiom, rules, iterations, angle, forwardMovement) {
                 case 'c':
                     currentState.direction.x-=this.angle
                     break
+                case 'u':
+                    currentState.direction.y+=this.angle
+                    break    
+                case 't':
+                    currentState.direction.y-=this.angle
+                    break
                 case '[':
                     stateToStore = new State(
                         new vv3.Vector(currentState.position.x,currentState.position.y,currentState.position.z), 

@@ -13,10 +13,30 @@ function toRadians (angle) {
     return angle * (Math.PI / 180);
 }
 
-function rotateAroundAxis () {
-    
-}
+function rotateAroundAxis(currentState, forwardMovement) {
+    var xRotator = new vv3.Line(
+        currentState.position.plus(new vv3.Vector(0,0,1)), 
+        currentState.position.plus(new vv3.Vector(0,0,-1))
+    )
+    var yRotator = new vv3.Line(
+        currentState.position.plus(new vv3.Vector(0,1,0)), 
+        currentState.position.plus(new vv3.Vector(0,-1,0))
+    )
+    var zRotator = new vv3.Line(
+        currentState.position.plus(new vv3.Vector(1,0,0)), 
+        currentState.position.plus(new vv3.Vector(-1,0,0))
+    )
 
+    var lineToTransform = new vv3.Line(
+        currentState.position, 
+        currentState.position.plus(new vv3.Vector(0, forwardMovement, 0))
+    )
+
+    lineToTransform = lineToTransform.rotateAroundLine(xRotator, currentState.direction.x)
+    lineToTransform = lineToTransform.rotateAroundLine(yRotator, currentState.direction.y)
+    lineToTransform = lineToTransform.rotateAroundLine(zRotator, currentState.direction.z)
+    return lineToTransform.lPrime
+}
 
 exports.Tree = function(axiom, rules, iterations, angle, forwardMovement) {
     this.type = 'Tree'
@@ -49,10 +69,11 @@ exports.Tree = function(axiom, rules, iterations, angle, forwardMovement) {
         this.instructions.forEach(function(instruction) {
             switch(instruction) {
                 case 'F':
-                    rDirection = toRadians(currentState.direction.z)
-                    x = currentState.position.x + (this.forwardMovement * Math.sin(rDirection))
-                    y = currentState.position.y + (this.forwardMovement * Math.cos(rDirection))
-                    newPosition = new vv3.Vector(x, y, 0)
+                    // rDirection = toRadians(currentState.direction.z)
+                    // x = currentState.position.x + (this.forwardMovement * Math.sin(rDirection))
+                    // y = currentState.position.y + (this.forwardMovement * Math.cos(rDirection))
+                    // newPosition = new vv3.Vector(x, y, 0)
+                    newPosition = rotateAroundAxis(currentState, this.forwardMovement)
                     this.branches.push(new vv3.Line(currentState.position, newPosition))
                     currentState.position = newPosition
                     break    

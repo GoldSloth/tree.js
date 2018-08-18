@@ -4,9 +4,7 @@
   "description": "Random generation of botanical features for use in 3D or 2D space",
   "main": "server.js",
   "scripts": {
-    "start": "node ./back-end/test-tree.js",
-    "server": "node ./back-end/server.js",
-    "dev": "nodemon ./back-end/server.js"
+    "start": "nodemon server.js"
   },
   "repository": {
     "type": "git",

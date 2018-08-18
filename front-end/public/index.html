@@ -9,7 +9,19 @@
 		</style>
 	</head>
 	<body>
-        <script src='http://localhost:3001/'></script>
+        <script>
+            function getBranches() {
+                var xmlhttp = new XMLHttpRequest()
+                xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                window.branches = JSON.parse(this.responseText)
+                }
+            }
+                xmlhttp.open("GET", "http://localhost:3001?angle=25&forwardMovement=1&iterations=6&axiom=['X']&rules={'X':'F+[[X]-X]-F[-FX]+X', 'F':'FF'}", true)
+                xmlhttp.send()
+        }
+        getBranches()
+        </script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/95/three.min.js"></script>
         <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
 		<script>

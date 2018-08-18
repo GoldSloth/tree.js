@@ -7,7 +7,7 @@ function logWrite(message, filename) {
         return console.log(err);
     }
 
-    console.log("Written to log");
+    console.log("Written to " + filename);
     });
 }
 

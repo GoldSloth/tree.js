@@ -12,7 +12,6 @@ function logWrite(message, filename) {
 }
 
 var testTree2D = new TC.Tree2D()
-
 testTree2D.makeInstructions()
 testTree2D.makeBranches()
 

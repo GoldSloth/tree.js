@@ -1,4 +1,4 @@
-const ST = require('./state.js')
+const { State } = require('./state.js')
 const vv3 = require('vanilla-vectors-3d')
 
 //const angle = 25
@@ -26,7 +26,6 @@ exports.Tree2D = function(axiom, rules, iterations, angle, forwardMovement) {
     this.iterations = iterations
     this.angle = angle
     this.forwardMovement = forwardMovement
-    console.log(this.forwardMovement)
     
     this.instructions = ['No instructions set']
     this.branches = []
@@ -41,8 +40,8 @@ exports.Tree2D = function(axiom, rules, iterations, angle, forwardMovement) {
     }
 
     this.makeBranches = function() {
-        var currentState = new ST.State(new vv3.Vector(0,0,0), 0)
-        var stateToStore = new ST.State(new vv3.Vector(0,0,0), 0)
+        var currentState = new State(new vv3.Vector(0,0,0), new vv3.Vector(0,0,0))
+        var stateToStore = new State(new vv3.Vector(0,0,0), new vv3.Vector(0,0,0))
         var stateStack = []
         var rDirection
         var x
@@ -51,7 +50,7 @@ exports.Tree2D = function(axiom, rules, iterations, angle, forwardMovement) {
         this.instructions.forEach(function(instruction) {
             switch(instruction) {
                 case 'F':
-                    rDirection = toRadians(currentState.direction)
+                    rDirection = toRadians(currentState.direction.z)
                     x = currentState.position.x + (this.forwardMovement * Math.sin(rDirection))
                     y = currentState.position.y + (this.forwardMovement * Math.cos(rDirection))
                     newPosition = new vv3.Vector(x, y, 0)
@@ -59,15 +58,18 @@ exports.Tree2D = function(axiom, rules, iterations, angle, forwardMovement) {
                     currentState.position = newPosition
                     break    
                 case '+':
-                    currentState.direction+=this.angle
+                    currentState.direction.z+=this.angle
                     break
                     
                 case '-':
-                    currentState.direction-=this.angle
+                    currentState.direction.z-=this.angle
                     break
                     
                 case '[':
-                    stateToStore = new ST.State(new vv3.Vector(currentState.position.x,currentState.position.y,currentState.position.z), currentState.direction)
+                    stateToStore = new State(
+                        new vv3.Vector(currentState.position.x,currentState.position.y,currentState.position.z), 
+                        new vv3.Vector(currentState.direction.x, currentState.direction.y, currentState.direction.z)
+                    )
                     stateStack.push(stateToStore)
                     break
                     

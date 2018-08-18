@@ -1,0 +1,18 @@
+version: '2'
+services:
+  front:
+    image: node:carbon
+    command: node index.js
+    volumes:
+      - ./front-end:/srv:Z
+    ports:
+      - "3000:3000"
+  back:
+    image: node:carbon
+    command: npm start
+    volumes:
+      - ./back-end:/srv:Z
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development

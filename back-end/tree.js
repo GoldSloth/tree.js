@@ -1,12 +1,6 @@
 const { State } = require('./state.js')
 const vv3 = require('vanilla-vectors-3d')
 
-//const angle = 25
-//const forwardMovement = 1
-//const iterations = 6
-//const axiom = ['X']
-//const rules = {'X':'F+[[X]-X]-F[-FX]+X', 'F':'FF'}
-
 function applyRules(letter) {
     if(letter in this.rules) {
         return this.rules[letter]
@@ -86,11 +80,15 @@ exports.Tree = function(axiom, rules, iterations, angle, forwardMovement) {
                 case '+':
                     currentState.direction.z+=this.angle
                     break
-                    
                 case '-':
                     currentState.direction.z-=this.angle
                     break
-                    
+                case 'z':
+                    currentState.direction.x+=this.angle
+                    break    
+                case 'c':
+                    currentState.direction.x-=this.angle
+                    break
                 case '[':
                     stateToStore = new State(
                         new vv3.Vector(currentState.position.x,currentState.position.y,currentState.position.z), 

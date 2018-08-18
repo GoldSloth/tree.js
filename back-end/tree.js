@@ -19,8 +19,8 @@ function toRadians (angle) {
     return angle * (Math.PI / 180);
 }
 
-exports.Tree2D = function(axiom, rules, iterations, angle, forwardMovement) {
-    this.type = 'Tree2D'
+exports.Tree = function(axiom, rules, iterations, angle, forwardMovement) {
+    this.type = 'Tree'
     this.axiom = axiom
     this.rules = rules
     this.iterations = iterations
@@ -86,9 +86,3 @@ exports.Tree2D = function(axiom, rules, iterations, angle, forwardMovement) {
         return this.branches
     }
 }
-
-
-// exports.Tree3D = function() {
-//     console.log('Tree3D created')
-//     this.type = 'Tree3D'
-// }

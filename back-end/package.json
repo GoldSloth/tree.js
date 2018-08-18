@@ -22,5 +22,8 @@
   },
   "devDependencies": {
     "nodemon": "^1.11.0"
+  },
+  "engines": {
+    "yarn": "1.4.0"
   }
 }

@@ -1,5 +1,5 @@
 const http = require('http');
-const { Tree2D } = require('./tree');
+const { Tree } = require('./tree');
 
 const hostname = '0.0.0.0';
 const port = 3001;
@@ -18,7 +18,7 @@ const server = http.createServer(function(request, response) {
     })
     request.on('end', () => {
       const treeConfig = JSON.parse(body)
-      var requestedBranches = new Tree2D(treeConfig.axiom, treeConfig.rules, treeConfig.iterations, treeConfig.angle, treeConfig.forwardMovement)
+      var requestedBranches = new Tree(treeConfig.axiom, treeConfig.rules, treeConfig.iterations, treeConfig.angle, treeConfig.forwardMovement)
       response.end(JSON.stringify(requestedBranches.makeTree()))
     })
   } else {

@@ -83,10 +83,10 @@ exports.Tree = function(axiom, rules, iterations, angle, forwardMovement) {
                 case '-':
                     currentState.direction.z-=this.angle
                     break
-                case 'z':
+                case 'c':
                     currentState.direction.x+=this.angle
                     break    
-                case 'c':
+                case 'z':
                     currentState.direction.x-=this.angle
                     break
                 case 'u':

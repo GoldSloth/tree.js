@@ -9,27 +9,12 @@
 		</style>
 	</head>
 	<body>
-        <script>
-        function getBranches() {
-            var xmlhttp = new XMLHttpRequest()
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    window.branches = JSON.parse(this.responseText)
-                    drawBranchesWhenReady()
-                }
-            }
-            xmlhttp.open("POST", "http://localhost:3001/", true)
-            xmlhttp.setRequestHeader("Content-Type", "application/json")
-            const treeConfig = {angle:25, forwardMovement: 1, iterations: 6, axiom: ['X'], rules: {'X':'F+[zt[X]uz-X]-F[-FX]uc+Xt','F':'FF',}}
-            xmlhttp.send(JSON.stringify(treeConfig))
-        }
-        getBranches()
-        </script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/95/three.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/95/three.min.js"></script>
         <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
-		<script>
-			var scene = new THREE.Scene();
-            var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+        <script>
+
+            var scene = new THREE.Scene();
+            var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 100000 );
             
             var renderer = new THREE.WebGLRenderer();
             renderer.setSize( window.innerWidth, window.innerHeight );
@@ -37,7 +22,7 @@
             
             var controls = new THREE.OrbitControls( camera );
 
-            camera.position.set(0, 0, 100);
+            camera.position.set(0, 500, 100);
             controls.update();
             
             var light = new THREE.AmbientLight(0xffffff);
@@ -54,6 +39,15 @@
             scene.add( cube );
         
             var lineTreeGroup = new THREE.Group()
+            function nextFrame() {
+                requestAnimationFrame(nextFrame);
+
+                controls.update();
+
+                renderer.render(scene, camera);
+
+            }
+
             function drawBranchesWhenReady() {
                 branches.forEach(function(line) {
                     var geom = new THREE.Geometry()
@@ -67,16 +61,41 @@
             
                 scene.add(lineTreeGroup)
             }
-            function nextFrame() {
-                requestAnimationFrame(nextFrame);
 
-                controls.update();
 
-                renderer.render(scene, camera);
+            var presets = [
+                {
+                    angle: 25,
+                    forwardMovement: 1,
+                    iterations: 6,
+                    axiom: ['A'],
+                    rules: {'A':'FZ[xy[A]YYxzA]zF[zFA]YXZAy','F':'FxF'}
+                },
 
+                {
+                    angle: 25.7,
+                    forwardMovement: 1,
+                    iterations: 6,
+                    axiom: ['A'],
+                    rules: {'A': '[XFFFA]ZZ[XFFFA]ZZ[XFFFA]'}
+                }
+            ]
+
+            function getBranches() {
+                var xmlhttp = new XMLHttpRequest()
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        window.branches = JSON.parse(this.responseText)
+                        drawBranchesWhenReady()
+                    }
+                }
+                xmlhttp.open("POST", "http://localhost:3001/", true)
+                xmlhttp.setRequestHeader("Content-Type", "application/json")
+                const treeConfig = presets[1]
+                xmlhttp.send(JSON.stringify(treeConfig))
             }
-            
+            getBranches()
             nextFrame()
-		</script>
+        </script>
 	</body>
 </html>

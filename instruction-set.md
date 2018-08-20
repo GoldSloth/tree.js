@@ -22,13 +22,14 @@
 ```
 
 ## The L-system alphabet consists of:
-* X - a placeholder character
 * F - forward movement
+
 * [ - open branch
 * ] - close branch
-* + - rotate positively around the z-axis 
-* - - rotate negatively around the z-axis
-* c - rotate positively around the x-axis 
-* z - rotate negatively around the x-axis
-* u - rotate positively around the y-axis 
-* t - rotate negatively around the y-axis
+
+* Z / + - rotate positively around the z-axis
+* z / - - rotate negatively around the z-axis
+* X - rotate positively around the x-axis 
+* x - rotate negatively around the x-axis
+* Y - rotate positively around the y-axis 
+* y - rotate negatively around the y-axis

@@ -10,25 +10,27 @@
 ## Example JSON request for a tree:
 ```javascript
 {
-	angle: {x: 22.5, y: 22.5, z: 22.5}, 
-	forwardMovement: 15, 
-	iterations: 5, 	
-	axiom: ['A'], 
+	angle: {x: 22.5, y: 22.5, z: 22.5},
+	forwardMovement: 15,
+	iterations: 6,
+	axiom: ['A'],
 	rules: {
 		global: {
-			'L': '[/`[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]]`'
 		},
 		0: {
-			'A': 'FFG'
+			'A': 'FA'
 		},
 		1: {
-			'G': '[&FLA]/////[&FLA]///////[&FLA]'
+			'A': 'FA'
 		},
 		2: {
-			'F': 'S/////F'
+			'A': '[&FLA]/////[&FLA]///////[&FLA]'
 		},
 		3: {
-			'S': 'FL'
+			'A': '[&FLA]/////[&FLA]///////[&FLA]'
+		},
+		4: {
+			'A': '[&[FL===L]]/////[&[FL===L]]///////[&[FL===L]]'
 		},
 		final: {
 			'L': '[/`[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]]`'
@@ -55,7 +57,7 @@ Final rules will have higher precedence than anything else.
 * - - rotate negatively around the z-axis
 * & - rotate positively around the x-axis 
 * ^ - rotate negatively around the x-axis
-* \ - rotate positively around the y-axis 
+* = - rotate positively around the y-axis (Because \ is used as a formatting character)
 * / - rotate negatively around the y-axis
 
 * | - rotate 180° around the z-axis

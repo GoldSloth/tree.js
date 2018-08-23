@@ -117,19 +117,25 @@
                 {
                     angle: {x: 22.5, y: 22.5, z: 22.5},
                     forwardMovement: 15,
-                    iterations: 5,
+                    iterations: 6,
                     axiom: ['A'],
                     rules: {
                         global: {
-                            'A': '[&FLA]/////[&FLA]///////[&FLA]',
-                            'F': 'S///F',
-                            'S': 'FL'
+                        },
+                        0: {
+                            'A': 'FA'
                         },
                         1: {
-                            'A': 'FLA'
+                            'A': 'FA'
                         },
                         2: {
-                            'A': 'FLA'
+                            'A': '[&FLA]/////[&FLA]///////[&FLA]'
+                        },
+                        3: {
+                            'A': '[&FLA]/////[&FLA]///////[&FLA]'
+                        },
+                        4: {
+                            'A': '[&[FL===L]]/////[&[FL===L]]///////[&[FL===L]]'
                         },
                         final: {
                             'L': '[/`[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]]`'

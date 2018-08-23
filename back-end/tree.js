@@ -21,7 +21,7 @@ function applyRules(letter, rules, iteration, final) {
             return rules.final[letter]
         }
     }
-    if ((iterativeRules != undefined)) {
+    if (!(iterativeRules == undefined)) {
         if (letter in iterativeRules) {
             console.log('Applied iteration rule ' + iteration)
             return iterativeRules[letter]
@@ -139,7 +139,7 @@ exports.Tree = function(axiom, rules, iterations, angle, forwardMovement) {
                 case '^':
                     currentState.direction.x-=this.angle.x
                     break
-                case '\\':
+                case '=':
                     currentState.direction.y+=this.angle.y
                     break    
                 case '/':

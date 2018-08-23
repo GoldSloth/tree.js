@@ -17,18 +17,15 @@ function applyRules(letter, rules, iteration, final) {
 
     if (final && (rules.final != undefined)) {
         if (letter in rules.final) {
-            console.log('Applied final rule')
             return rules.final[letter]
         }
     }
     if (!(iterativeRules == undefined)) {
         if (letter in iterativeRules) {
-            console.log('Applied iteration rule ' + iteration)
             return iterativeRules[letter]
         }
     }
     if (letter in rules.global) {
-        console.log('Applied global rule')
         return rules.global[letter]
     }
     return letter
@@ -98,7 +95,6 @@ exports.Tree = function(axiom, rules, iterations, angle, forwardMovement) {
     }
 
     this.makeBranches = function() {
-        console.log(this.instructions)
         var currentState = new State(new vv3.Vector(0,0,0), new vv3.Vector(0,0,0))
         var stateToStore = new State(new vv3.Vector(0,0,0), new vv3.Vector(0,0,0))
         var stateStack = []

@@ -160,7 +160,7 @@
                         drawBranchesWhenReady()
                     }
                 }
-                xmlhttp.open("POST", "http://localhost:3001/", true)
+                xmlhttp.open("POST", "https://tranquil-sands-18396.herokuapp.com", true)
                 xmlhttp.setRequestHeader("Content-Type", "application/json")
                 const treeConfig = presets[0]
                 xmlhttp.send(JSON.stringify(treeConfig))

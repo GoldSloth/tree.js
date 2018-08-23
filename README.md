@@ -8,7 +8,7 @@ A library for creating 3d models of trees and foliage from an L system *"procedu
 ![Fancy Trees](https://image.ibb.co/fecNce/Screen_Shot_2018_08_19_at_00_07_21.jpg)
 
 ## Check it out live: 
-![Live Preview](https://golddolphinskb-fexcraftian.github.io/tree.js/)
+[Live Preview](https://golddolphinskb-fexcraftian.github.io/tree.js/)
 
 ## Documentation:
-[Instruction Set](indstruction-set.md)
+[Instruction Set](instruction-set.md)

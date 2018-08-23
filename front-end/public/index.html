@@ -9,27 +9,12 @@
 		</style>
 	</head>
 	<body>
-        <script>
-        function getBranches() {
-            var xmlhttp = new XMLHttpRequest()
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    window.branches = JSON.parse(this.responseText)
-                    drawBranchesWhenReady()
-                }
-            }
-            xmlhttp.open("POST", "http://localhost:3001/", true)
-            xmlhttp.setRequestHeader("Content-Type", "application/json")
-            const treeConfig = {angle:25, forwardMovement: 1, iterations: 6, axiom: ['X'], rules: {'X':'F+[zt[X]uz-X]-F[-FX]uc+Xt','F':'FF',}}
-            xmlhttp.send(JSON.stringify(treeConfig))
-        }
-        getBranches()
-        </script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/95/three.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/95/three.min.js"></script>
         <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
-		<script>
-			var scene = new THREE.Scene();
-            var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+        <script>
+
+            var scene = new THREE.Scene();
+            var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 100000 );
             
             var renderer = new THREE.WebGLRenderer();
             renderer.setSize( window.innerWidth, window.innerHeight );
@@ -37,16 +22,13 @@
             
             var controls = new THREE.OrbitControls( camera );
 
-            camera.position.set(0, 0, 100);
+            camera.position.set(0, 500, 100);
             controls.update();
-            
-            var light = new THREE.AmbientLight(0xffffff);
+            var ambLight = new THREE.AmbientLight(0xffffff, 0.5)
+            var light = new THREE.DirectionalLight(0xffffff, 0.5);
+            light.position = controls.object.position.clone()
+            scene.add(ambLight)
             scene.add(light);
-            
-            var material = new THREE.LineBasicMaterial( {
-                color: 0x44ff44, 
-                linewidth: 4
-            });
             
             var geom = new THREE.BoxBufferGeometry(1, 1, 1);
             var mat = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
@@ -54,19 +36,6 @@
             scene.add( cube );
         
             var lineTreeGroup = new THREE.Group()
-            function drawBranchesWhenReady() {
-                branches.forEach(function(line) {
-                    var geom = new THREE.Geometry()
-                    geom.vertices.push(new THREE.Vector3(line.l0.x, line.l0.y, line.l0.z))
-                    geom.vertices.push(new THREE.Vector3(line.lPrime.x, line.lPrime.y, line.lPrime.z))
-                    
-                    var singleLine = new THREE.Line(geom, material)
-                    lineTreeGroup.add(singleLine)
-                    
-                })
-            
-                scene.add(lineTreeGroup)
-            }
             function nextFrame() {
                 requestAnimationFrame(nextFrame);
 
@@ -75,8 +44,129 @@
                 renderer.render(scene, camera);
 
             }
+
+            function drawBranchesWhenReady() {
+                var nodes = [new THREE.Vector3(0,0,0)]
+                var randomRange = new THREE.Vector3(0.5, 0.5, 0.5)
+                var material = new THREE.MeshLambertMaterial( { color: 0x662211 } );
+                branches.branches.forEach(function(line) {
+                    var l0 = new THREE.Vector3(line.l0.x, line.l0.y, line.l0.z)
+                    var l1 = new THREE.Vector3(line.lPrime.x, line.lPrime.y, line.lPrime.z)
+                    for (let i=0; i<nodes.length;i++) {
+                        node = nodes[i]
+                        if (!(node.x == l0.x && node.y == l0.y && node.z == l0.z)) {
+                            nodes.push(new THREE.Vector3(l0.x, l0.y, l0.z))
+                            break
+                        }
+                    }
+                    var meanVector = (
+                        new THREE.Vector3(
+                            0,0,0
+                        )).add(
+                            l0
+                        ).add(
+                            l1
+                        ).divideScalar(
+                            2
+                        ).add(new THREE.Vector3(
+                            Math.random()*randomRange.x,
+                            Math.random()*randomRange.y,
+                            Math.random()*randomRange.z)
+                        )
+                    var branchCurve = new THREE.QuadraticBezierCurve3(
+                        l0,
+                        meanVector,
+                        l1
+                    )
+                    
+                    var tubeGeom = new THREE.TubeGeometry(branchCurve, 20, 0.4, 8, false)
+                    
+                    var singleTube = new THREE.Mesh(tubeGeom, material)
+                    lineTreeGroup.add(singleTube)
+                    
+                })
+                console.log('Drawn branches')
+                nodes.forEach(function(node) {
+                    var nodesGeometry = new THREE.SphereGeometry(0.5, 16, 16)
+                    var newNode = new THREE.Mesh(nodesGeometry, material)
+                    newNode.position.x = node.x
+                    newNode.position.y = node.y
+                    newNode.position.z = node.z
+                    scene.add(newNode)
+                })
             
+                
+                drawLeavesWhenReady()
+            }
+
+            function drawLeavesWhenReady() {
+                var leafMaterial = new THREE.LineBasicMaterial({color: 0x44ff44})
+                branches.leaves.forEach(function(line) {
+                    var leafGeom = new THREE.Geometry()
+                    leafGeom.vertices.push(new THREE.Vector3(line.l0.x, line.l0.y, line.l0.z))
+                    leafGeom.vertices.push(new THREE.Vector3(line.lPrime.x, line.lPrime.y, line.lPrime.z))
+                    
+                    var singleLine = new THREE.Line(leafGeom, leafMaterial)
+                    lineTreeGroup.add(singleLine)
+                })
+                scene.add(lineTreeGroup)
+            }
+
+
+            var presets = [
+                {
+                    angle: {x: 22.5, y: 22.5, z: 22.5},
+                    forwardMovement: 15,
+                    iterations: 6,
+                    axiom: ['A'],
+                    rules: {
+                        global: {
+                        },
+                        0: {
+                            'A': 'FA'
+                        },
+                        1: {
+                            'A': 'FA'
+                        },
+                        2: {
+                            'A': '[&FLA]/////[&FLA]///////[&FLA]'
+                        },
+                        3: {
+                            'A': '[&FLA]/////[&FLA]///////[&FLA]'
+                        },
+                        4: {
+                            'A': '[&[FL===L]]/////[&[FL===L]]///////[&[FL===L]]'
+                        },
+                        final: {
+                            'L': '[/`[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]]`'
+                        }
+                    }
+                },
+
+                {
+                    angle: {x: 25, y: 25, z: 25},
+                    forwardMovement: 1,
+                    iterations: 6,
+                    axiom: ['A'],
+                    rules: {'A': '[XFFFA]ZZ[XFFFA]ZZ[XFFFA]'}
+                }
+            ]
+
+            function getBranches() {
+                var xmlhttp = new XMLHttpRequest()
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        window.branches = JSON.parse(this.responseText)
+                        drawBranchesWhenReady()
+                    }
+                }
+                xmlhttp.open("POST", "https://tranquil-sands-18396.herokuapp.com", true)
+                xmlhttp.setRequestHeader("Content-Type", "application/json")
+                const treeConfig = presets[0]
+                xmlhttp.send(JSON.stringify(treeConfig))
+            }
+            getBranches()
             nextFrame()
-		</script>
+        </script>
 	</body>
 </html>

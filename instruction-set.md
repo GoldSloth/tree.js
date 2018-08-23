@@ -10,25 +10,56 @@
 ## Example JSON request for a tree:
 ```javascript
 {
-	angle:25, 
-	forwardMovement: 1, 
-	iterations: 6, 	
-	axiom: ['X'], 
+	angle: {x: 22.5, y: 22.5, z: 22.5},
+	forwardMovement: 15,
+	iterations: 6,
+	axiom: ['A'],
 	rules: {
-		'X':'F+[zt[X]uz-X]-F[-FX]uc+Xt',
-		'F':'FF'
+		global: {
+		},
+		0: {
+			'A': 'FA'
+		},
+		1: {
+			'A': 'FA'
+		},
+		2: {
+			'A': '[&FLA]/////[&FLA]///////[&FLA]'
+		},
+		3: {
+			'A': '[&FLA]/////[&FLA]///////[&FLA]'
+		},
+		4: {
+			'A': '[&[FL===L]]/////[&[FL===L]]///////[&[FL===L]]'
+		},
+		final: {
+			'L': '[/`[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]]`'
+		}
 	}
 }
 ```
 
+Global rules can be applied at any time that a specific iteration rule is not found.
+Iteration specific rules will always have a higher priority than global rules.
+Final rules will have higher precedence than anything else.
+
 ## The L-system alphabet consists of:
-* X - a placeholder character
 * F - forward movement
+* f - forward movement of a 'mini' step (1/10th of a full step)
+
+
 * [ - open branch
 * ] - close branch
-* + - rotate positively around the z-axis 
+
+(Fitting with the paper: [Algorthmic Botany](http://algorithmicbotany.org/papers/abop/abop.pdf))
+
+* + - rotate positively around the z-axis
 * - - rotate negatively around the z-axis
-* c - rotate positively around the x-axis 
-* z - rotate negatively around the x-axis
-* u - rotate positively around the y-axis 
-* t - rotate negatively around the y-axis
+* & - rotate positively around the x-axis 
+* ^ - rotate negatively around the x-axis
+* = - rotate positively around the y-axis (Because \ is used as a formatting character)
+* / - rotate negatively around the y-axis
+
+* | - rotate 180° around the z-axis
+
+* ` - leaf declaration (Vertices will be sent in the leaf section of the output, as opposed to the default branches)

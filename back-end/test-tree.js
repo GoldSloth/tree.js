@@ -15,8 +15,10 @@ const forwardMovement = 1
 const iterations = 6
 const axiom = ['X']
 const rules = {'X':'F+[[X]-X]-F[-FX]+X', 'F':'FF'}
+const useLengthAsWidth = true
+const branchWidth = 1
 
-var testTree = new Tree(axiom, rules, iterations, angle, forwardMovement)
+var testTree = new Tree(axiom, rules, iterations, angle, forwardMovement, branchWidth, useLengthAsWidth)
 var lines = testTree.makeTree()
 
 logWrite('Tree Instructions: ' + testTree.instructions + '\n' + 'Branches: ' + testTree.branches, 'tree-log.log')

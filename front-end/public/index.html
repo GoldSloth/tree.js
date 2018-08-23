@@ -117,25 +117,30 @@
                 {
                     angle: {x: 22.5, y: 22.5, z: 22.5},
                     forwardMovement: 15,
-                    iterations: 6,
+                    branchWidth: 1,
+                    iterations: 7,
                     axiom: ['A'],
+                    useLengthAsWidth: true,
                     rules: {
                         global: {
                         },
                         0: {
-                            'A': 'FA'
+                            'A': '1FA'
                         },
                         1: {
-                            'A': 'FA'
+                            'A': '1FA'
                         },
                         2: {
-                            'A': '[&FLA]/////[&FLA]///////[&FLA]'
+                            'A': '[2&FLA]/////[2&FLA]///////[2&FLA]'
                         },
                         3: {
-                            'A': '[&FLA]/////[&FLA]///////[&FLA]'
+                            'A': '[2&FLA]/////[2&FAFLA]///////[2&FLA]'
                         },
                         4: {
-                            'A': '[&[FL===L]]/////[&[FL===L]]///////[&[FL===L]]'
+                            'A': '[&3FA]/////[&3FAFA]///////[&3FA]'
+                        },
+                        5: {
+                            'A': '[&[4F^L===&3L]]/////[&[4FL===L]]///////[&[4FL===L]]'
                         },
                         final: {
                             'L': '[/`[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]]`'
@@ -160,7 +165,12 @@
                         drawBranchesWhenReady()
                     }
                 }
-                xmlhttp.open("POST", "https://tranquil-sands-18396.herokuapp.com", true)
+                var dev = true
+                if (dev) {
+                    xmlhttp.open("POST", "http://localhost:3001", true)
+                } else {
+                    xmlhttp.open("POST", "https://tranquil-sands-18396.herokuapp.com", true)
+                }   
                 xmlhttp.setRequestHeader("Content-Type", "application/json")
                 const treeConfig = presets[0]
                 xmlhttp.send(JSON.stringify(treeConfig))

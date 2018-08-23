@@ -24,14 +24,11 @@
 
             camera.position.set(0, 500, 100);
             controls.update();
-            
-            var light = new THREE.AmbientLight(0xffffff);
+            var ambLight = new THREE.AmbientLight(0xffffff, 0.5)
+            var light = new THREE.DirectionalLight(0xffffff, 0.5);
+            light.position = controls.object.position.clone()
+            scene.add(ambLight)
             scene.add(light);
-            
-            var material = new THREE.LineBasicMaterial( {
-                color: 0x44ff44, 
-                linewidth: 4
-            });
             
             var geom = new THREE.BoxBufferGeometry(1, 1, 1);
             var mat = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
@@ -49,31 +46,99 @@
             }
 
             function drawBranchesWhenReady() {
-                branches.forEach(function(line) {
-                    var geom = new THREE.Geometry()
-                    geom.vertices.push(new THREE.Vector3(line.l0.x, line.l0.y, line.l0.z))
-                    geom.vertices.push(new THREE.Vector3(line.lPrime.x, line.lPrime.y, line.lPrime.z))
+                var nodes = [new THREE.Vector3(0,0,0)]
+                var randomRange = new THREE.Vector3(0.5, 0.5, 0.5)
+                var material = new THREE.MeshLambertMaterial( { color: 0x662211 } );
+                branches.branches.forEach(function(line) {
+                    var l0 = new THREE.Vector3(line.l0.x, line.l0.y, line.l0.z)
+                    var l1 = new THREE.Vector3(line.lPrime.x, line.lPrime.y, line.lPrime.z)
+                    for (let i=0; i<nodes.length;i++) {
+                        node = nodes[i]
+                        if (!(node.x == l0.x && node.y == l0.y && node.z == l0.z)) {
+                            nodes.push(new THREE.Vector3(l0.x, l0.y, l0.z))
+                            break
+                        }
+                    }
+                    var meanVector = (
+                        new THREE.Vector3(
+                            0,0,0
+                        )).add(
+                            l0
+                        ).add(
+                            l1
+                        ).divideScalar(
+                            2
+                        ).add(new THREE.Vector3(
+                            Math.random()*randomRange.x,
+                            Math.random()*randomRange.y,
+                            Math.random()*randomRange.z)
+                        )
+                    var branchCurve = new THREE.QuadraticBezierCurve3(
+                        l0,
+                        meanVector,
+                        l1
+                    )
                     
-                    var singleLine = new THREE.Line(geom, material)
-                    lineTreeGroup.add(singleLine)
+                    var tubeGeom = new THREE.TubeGeometry(branchCurve, 20, 0.4, 8, false)
+                    
+                    var singleTube = new THREE.Mesh(tubeGeom, material)
+                    lineTreeGroup.add(singleTube)
                     
                 })
+                console.log('Drawn branches')
+                nodes.forEach(function(node) {
+                    var nodesGeometry = new THREE.SphereGeometry(0.5, 16, 16)
+                    var newNode = new THREE.Mesh(nodesGeometry, material)
+                    newNode.position.x = node.x
+                    newNode.position.y = node.y
+                    newNode.position.z = node.z
+                    scene.add(newNode)
+                })
             
+                
+                drawLeavesWhenReady()
+            }
+
+            function drawLeavesWhenReady() {
+                var leafMaterial = new THREE.LineBasicMaterial({color: 0x44ff44})
+                branches.leaves.forEach(function(line) {
+                    var leafGeom = new THREE.Geometry()
+                    leafGeom.vertices.push(new THREE.Vector3(line.l0.x, line.l0.y, line.l0.z))
+                    leafGeom.vertices.push(new THREE.Vector3(line.lPrime.x, line.lPrime.y, line.lPrime.z))
+                    
+                    var singleLine = new THREE.Line(leafGeom, leafMaterial)
+                    lineTreeGroup.add(singleLine)
+                })
                 scene.add(lineTreeGroup)
             }
 
 
             var presets = [
                 {
-                    angle: 25,
-                    forwardMovement: 1,
-                    iterations: 6,
+                    angle: {x: 22.5, y: 22.5, z: 22.5},
+                    forwardMovement: 15,
+                    iterations: 5,
                     axiom: ['A'],
-                    rules: {'A':'FZ[xy[A]YYxzA]zF[zFA]YXZAy','F':'FxF'}
+                    rules: {
+                        global: {
+                            'A': '[&FLA]/////[&FLA]///////[&FLA]',
+                            'F': 'S///F',
+                            'S': 'FL'
+                        },
+                        1: {
+                            'A': 'FLA'
+                        },
+                        2: {
+                            'A': 'FLA'
+                        },
+                        final: {
+                            'L': '[/`[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]]`'
+                        }
+                    }
                 },
 
                 {
-                    angle: 25.7,
+                    angle: {x: 25, y: 25, z: 25},
                     forwardMovement: 1,
                     iterations: 6,
                     axiom: ['A'],
@@ -91,7 +156,7 @@
                 }
                 xmlhttp.open("POST", "http://localhost:3001/", true)
                 xmlhttp.setRequestHeader("Content-Type", "application/json")
-                const treeConfig = presets[1]
+                const treeConfig = presets[0]
                 xmlhttp.send(JSON.stringify(treeConfig))
             }
             getBranches()

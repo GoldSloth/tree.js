@@ -18,7 +18,7 @@ const server = http.createServer(function(request, response) {
     })
     request.on('end', () => {
       const treeConfig = JSON.parse(body)
-      var requestedBranches = new Tree(treeConfig.axiom, treeConfig.rules, treeConfig.iterations, treeConfig.angle, treeConfig.forwardMovement)
+      var requestedBranches = new Tree(treeConfig.axiom, treeConfig.rules, treeConfig.iterations, treeConfig.angle, treeConfig.forwardMovement, treeConfig.branchWidth, treeConfig.useLengthAsWidth)
       response.end(JSON.stringify(requestedBranches.makeTree()))
     })
   } else {

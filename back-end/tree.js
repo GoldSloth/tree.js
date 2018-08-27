@@ -58,13 +58,15 @@ function rotateAroundAxis(currentState, forwardMovement) {
     return lineToTransform.lPrime
 }
 
-exports.Tree = function(axiom, rules, iterations, angle, forwardMovement) {
+exports.Tree = function(axiom, rules, iterations, angle, forwardMovement, branchWidth, useLengthAsWidth) {
     this.type = 'Tree'
     this.axiom = axiom
     this.rules = rules
     this.iterations = iterations
     this.angle = angle
     this.forwardMovement = forwardMovement
+    this.branchWidth = branchWidth
+    this.useLengthAsWidth = useLengthAsWidth
     
     this.instructions = ['No instructions set']
     this.branches = []
@@ -95,6 +97,8 @@ exports.Tree = function(axiom, rules, iterations, angle, forwardMovement) {
     }
 
     this.makeBranches = function() {
+        var bWidth = this.branchWidth
+        var bLength = this.forwardMovement
         var currentState = new State(new vv3.Vector(0,0,0), new vv3.Vector(0,0,0))
         var stateToStore = new State(new vv3.Vector(0,0,0), new vv3.Vector(0,0,0))
         var stateStack = []
@@ -106,11 +110,11 @@ exports.Tree = function(axiom, rules, iterations, angle, forwardMovement) {
         this.instructions.forEach(function(instruction) {
             switch(instruction) {
                 case 'F':
-                    newPosition = rotateAroundAxis(currentState, this.forwardMovement)
+                    newPosition = rotateAroundAxis(currentState, bLength)
                     if (leafMode) {
                         this.leaves.push(new vv3.Line(currentState.position, newPosition))
                     } else {
-                        this.branches.push(new vv3.Line(currentState.position, newPosition))
+                        this.branches.push([new vv3.Line(currentState.position, newPosition), bWidth])
                     }
                     currentState.position = newPosition
                     break    
@@ -158,8 +162,50 @@ exports.Tree = function(axiom, rules, iterations, angle, forwardMovement) {
                 case '`':
                     leafMode = (!leafMode)
                     break
+                case '1':
+                    bLength = this.forwardMovement
+                    if (this.useLengthAsWidth) {
+                        bWidth = this.branchWidth
+                    }
+                    break
+                case '2':
+                    bLength = this.forwardMovement * 0.5
+                    if (this.useLengthAsWidth) {
+                        bWidth = this.branchWidth * 0.5
+                    }
+                    break
+                case '3':
+                    bLength = this.forwardMovement * 0.25
+                    if (this.useLengthAsWidth) {
+                        bWidth = this.branchWidth * 0.25
+                    }
+                    break
+                case '4':
+                    bLength = this.forwardMovement * 0.125
+                    if (this.useLengthAsWidth) {
+                        bWidth = this.branchWidth * 0.125
+                    }
+                    break
+                
             }
         }, this)
+        this.branches = this.branches.map(x => {
+            return {
+                'p0': 
+                {
+                    'x': x[0].l0.x,
+                    'y': x[0].l0.y,
+                    'z': x[0].l0.z
+                },
+                'p1': 
+                {
+                    'x': x[0].lPrime.x, 
+                    'y': x[0].lPrime.y, 
+                    'z': x[0].lPrime.z
+                },
+                'w': x[1]
+            }
+        })
     }
 
     this.makeTree = function() {

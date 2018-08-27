@@ -46,16 +46,17 @@
             }
 
             function drawBranchesWhenReady() {
-                var nodes = [new THREE.Vector3(0,0,0)]
+                var nodes = [{'position': new THREE.Vector3(0,0,0), 'size': 1}]
                 var randomRange = new THREE.Vector3(0.5, 0.5, 0.5)
                 var material = new THREE.MeshLambertMaterial( { color: 0x662211 } );
-                branches.branches.forEach(function(line) {
-                    var l0 = new THREE.Vector3(line.l0.x, line.l0.y, line.l0.z)
-                    var l1 = new THREE.Vector3(line.lPrime.x, line.lPrime.y, line.lPrime.z)
+                branches.forEach(function(line) {
+                    var l0 = new THREE.Vector3(line.p0.x, line.p0.y, line.p0.z)
+                    var l1 = new THREE.Vector3(line.p1.x, line.p1.y, line.p1.z)
                     for (let i=0; i<nodes.length;i++) {
-                        node = nodes[i]
-                        if (!(node.x == l0.x && node.y == l0.y && node.z == l0.z)) {
-                            nodes.push(new THREE.Vector3(l0.x, l0.y, l0.z))
+                        var node = nodes[i]
+                        if (!(node.position.x == l0.x && node.position.y == l0.y && node.position.z == l0.z)) {
+                            var nodePosition = new THREE.Vector3(l0.x, l0.y, l0.z)
+                            nodes.push({'position': nodePosition, 'size': line.w})
                             break
                         }
                     }
@@ -79,7 +80,7 @@
                         l1
                     )
                     
-                    var tubeGeom = new THREE.TubeGeometry(branchCurve, 20, 0.4, 8, false)
+                    var tubeGeom = new THREE.TubeGeometry(branchCurve, 20, line.w, 8, true)
                     
                     var singleTube = new THREE.Mesh(tubeGeom, material)
                     lineTreeGroup.add(singleTube)
@@ -87,11 +88,11 @@
                 })
                 console.log('Drawn branches')
                 nodes.forEach(function(node) {
-                    var nodesGeometry = new THREE.SphereGeometry(0.5, 16, 16)
+                    var nodesGeometry = new THREE.SphereGeometry(1 * node.size, 16, 16)
                     var newNode = new THREE.Mesh(nodesGeometry, material)
-                    newNode.position.x = node.x
-                    newNode.position.y = node.y
-                    newNode.position.z = node.z
+                    newNode.position.x = node.position.x
+                    newNode.position.y = node.position.y
+                    newNode.position.z = node.position.z
                     scene.add(newNode)
                 })
             
@@ -101,7 +102,7 @@
 
             function drawLeavesWhenReady() {
                 var leafMaterial = new THREE.LineBasicMaterial({color: 0x44ff44})
-                branches.leaves.forEach(function(line) {
+                leaves.forEach(function(line) {
                     var leafGeom = new THREE.Geometry()
                     leafGeom.vertices.push(new THREE.Vector3(line.l0.x, line.l0.y, line.l0.z))
                     leafGeom.vertices.push(new THREE.Vector3(line.lPrime.x, line.lPrime.y, line.lPrime.z))
@@ -117,25 +118,30 @@
                 {
                     angle: {x: 22.5, y: 22.5, z: 22.5},
                     forwardMovement: 15,
-                    iterations: 6,
+                    branchWidth: 2,
+                    iterations: 7,
                     axiom: ['A'],
+                    useLengthAsWidth: true,
                     rules: {
                         global: {
                         },
                         0: {
-                            'A': 'FA'
+                            'A': '1FA'
                         },
                         1: {
-                            'A': 'FA'
+                            'A': '1FA'
                         },
                         2: {
-                            'A': '[&FLA]/////[&FLA]///////[&FLA]'
+                            'A': '[2&FLA]/////[2&FLA]///////[2&FLA]'
                         },
                         3: {
-                            'A': '[&FLA]/////[&FLA]///////[&FLA]'
+                            'A': '[2&FLA]/////[2&FAFLA]///////[2&FLA]'
                         },
                         4: {
-                            'A': '[&[FL===L]]/////[&[FL===L]]///////[&[FL===L]]'
+                            'A': '[&3FA]/////[&3FAFA]///////[&3FA]'
+                        },
+                        5: {
+                            'A': '[&[4F^L===&3L]]/////[&[4FL===L]]///////[&[4FL===L]]'
                         },
                         final: {
                             'L': '[/`[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]]`'
@@ -156,11 +162,18 @@
                 var xmlhttp = new XMLHttpRequest()
                 xmlhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
-                        window.branches = JSON.parse(this.responseText)
+                        window.treeInfo = JSON.parse(this.responseText)
+                        window.branches = treeInfo.branches
+                        window.leaves = treeInfo.leaves
                         drawBranchesWhenReady()
                     }
                 }
-                xmlhttp.open("POST", "https://tranquil-sands-18396.herokuapp.com", true)
+                var dev = false
+                if (dev) {
+                    xmlhttp.open("POST", "http://localhost:3001", true)
+                } else {
+                    xmlhttp.open("POST", "https://tranquil-sands-18396.herokuapp.com", true)
+                }   
                 xmlhttp.setRequestHeader("Content-Type", "application/json")
                 const treeConfig = presets[0]
                 xmlhttp.send(JSON.stringify(treeConfig))

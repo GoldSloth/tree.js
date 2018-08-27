@@ -12,8 +12,10 @@
 {
 	angle: {x: 22.5, y: 22.5, z: 22.5},
 	forwardMovement: 15,
+	branchWidth: 1,
 	iterations: 6,
 	axiom: ['A'],
+	useLengthAsWidth: true,
 	rules: {
 		global: {
 		},
@@ -45,7 +47,7 @@ Final rules will have higher precedence than anything else.
 
 ## The L-system alphabet consists of:
 * F - forward movement
-* f - forward movement of a 'mini' step (1/10th of a full step)
+* f - forward movement of a 'mini' step (1/10th of a full step) this is usually for leaves.
 
 
 * [ - open branch
@@ -63,3 +65,18 @@ Final rules will have higher precedence than anything else.
 * | - rotate 180° around the z-axis
 
 * ` - leaf declaration (Vertices will be sent in the leaf section of the output, as opposed to the default branches)
+
+* 1 - Sets segment length to 100%
+* 2 - Sets segment length to 50%
+* 3 - Sets segment length to 25%
+* 4 - Sets segment length to 12.5%
+
+Alternatively, the flag ``useLengthAsWidth`` can be given.
+
+* 5 - Unused
+
+***This section is currently not implemented
+* 6 - sets branch width to 12.5%
+* 7 - sets branch width to 25%
+* 8 - sets branch width to 50%
+* 9 - sets branch width to 100%***

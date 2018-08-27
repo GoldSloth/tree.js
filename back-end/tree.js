@@ -110,12 +110,11 @@ exports.Tree = function(axiom, rules, iterations, angle, forwardMovement, branch
         this.instructions.forEach(function(instruction) {
             switch(instruction) {
                 case 'F':
-                console.log(bLength)
                     newPosition = rotateAroundAxis(currentState, bLength)
                     if (leafMode) {
                         this.leaves.push(new vv3.Line(currentState.position, newPosition))
                     } else {
-                        this.branches.push(new vv3.Line(currentState.position, newPosition))
+                        this.branches.push([new vv3.Line(currentState.position, newPosition), bWidth])
                     }
                     currentState.position = newPosition
                     break    
@@ -170,26 +169,43 @@ exports.Tree = function(axiom, rules, iterations, angle, forwardMovement, branch
                     }
                     break
                 case '2':
-                    bLength = this.forwardMovement * 0.75
-                    if (this.useLengthAsWidth) {
-                        bWidth = this.branchWidth * 0.75
-                    }
-                    break
-                case '3':
                     bLength = this.forwardMovement * 0.5
                     if (this.useLengthAsWidth) {
                         bWidth = this.branchWidth * 0.5
                     }
                     break
-                case '4':
+                case '3':
                     bLength = this.forwardMovement * 0.25
                     if (this.useLengthAsWidth) {
                         bWidth = this.branchWidth * 0.25
                     }
                     break
+                case '4':
+                    bLength = this.forwardMovement * 0.125
+                    if (this.useLengthAsWidth) {
+                        bWidth = this.branchWidth * 0.125
+                    }
+                    break
                 
             }
         }, this)
+        this.branches = this.branches.map(x => {
+            return {
+                'p0': 
+                {
+                    'x': x[0].l0.x,
+                    'y': x[0].l0.y,
+                    'z': x[0].l0.z
+                },
+                'p1': 
+                {
+                    'x': x[0].lPrime.x, 
+                    'y': x[0].lPrime.y, 
+                    'z': x[0].lPrime.z
+                },
+                'w': x[1]
+            }
+        })
     }
 
     this.makeTree = function() {

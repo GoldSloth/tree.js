@@ -14,7 +14,10 @@ const angle = 25
 const forwardMovement = 1
 const iterations = 6
 const axiom = ['X']
-const rules = {'X':'F+[[X]-X]-F[-FX]+X', 'F':'FF'}
+const rules = {
+    global:
+    {'X':'F+[[X]-X]-F[-FX]+X', 'F':'FF'}
+}
 const useLengthAsWidth = true
 const branchWidth = 1
 

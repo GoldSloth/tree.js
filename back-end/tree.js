@@ -169,21 +169,21 @@ exports.Tree = function(axiom, rules, iterations, angle, forwardMovement, branch
                     }
                     break
                 case '2':
-                    bLength = this.forwardMovement * 0.5
+                    bLength = this.forwardMovement * 0.6
                     if (this.useLengthAsWidth) {
                         bWidth = this.branchWidth * 0.5
                     }
                     break
                 case '3':
-                    bLength = this.forwardMovement * 0.25
+                    bLength = this.forwardMovement * 0.4
                     if (this.useLengthAsWidth) {
-                        bWidth = this.branchWidth * 0.25
+                        bWidth = this.branchWidth * 0.10
                     }
                     break
                 case '4':
-                    bLength = this.forwardMovement * 0.125
+                    bLength = this.forwardMovement * 0.2
                     if (this.useLengthAsWidth) {
-                        bWidth = this.branchWidth * 0.125
+                        bWidth = this.branchWidth * 0.05
                     }
                     break
                 

@@ -67,16 +67,23 @@ Final rules will have higher precedence than anything else.
 * ` - leaf declaration (Vertices will be sent in the leaf section of the output, as opposed to the default branches)
 
 * 1 - Sets segment length to 100%
-* 2 - Sets segment length to 50%
-* 3 - Sets segment length to 25%
-* 4 - Sets segment length to 12.5%
+* 2 - Sets segment length to 60%
+* 3 - Sets segment length to 40%
+* 4 - Sets segment length to 20%
 
 Alternatively, the flag ``useLengthAsWidth`` can be given.
+
+| Width | Length |
+|-------|--------|
+| 100%  | 100%   |
+| 50%   | 60%    |
+| 10%   | 40%    |
+| 5%    | 20%    |
 
 * 5 - Unused
 
 ***This section is currently not implemented
-* 6 - sets branch width to 12.5%
-* 7 - sets branch width to 25%
-* 8 - sets branch width to 50%
-* 9 - sets branch width to 100%***
+* 6 - sets branch width to 100%
+* 7 - sets branch width to 50%
+* 8 - sets branch width to 10%
+* 9 - sets branch width to 5%***

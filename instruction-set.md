@@ -1,5 +1,5 @@
 ## Instructions
-# The tree config sent as a JSON request to the back-end needs to contain the following properties:
+#### The tree config sent as a JSON request to the back-end needs to contain the following properties:
 * angle - the degrees of rotation around an axis
 * forwardMovement - the length of each branch segment
 * iterations - the number of times the algorithm with run (complexity)
@@ -71,7 +71,7 @@ Final rules will have higher precedence than anything else.
 * 3 - Sets segment length to 40%
 * 4 - Sets segment length to 20%
 
-# Alternatively, the flag ``useLengthAsWidth`` can be given.
+#### Alternatively, the flag ``useLengthAsWidth`` can be given.
 
 | Width | Length |
 |-------|--------|
@@ -82,7 +82,7 @@ Final rules will have higher precedence than anything else.
 
 * 5 - Unused
 
-# This section is currently not implemented
+#### This section is currently not implemented
 * 6 - sets branch width to 100%
 * 7 - sets branch width to 50%
 * 8 - sets branch width to 10%

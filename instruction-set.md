@@ -55,10 +55,10 @@ Final rules will have higher precedence than anything else.
 
 (Fitting with the paper: [Algorthmic Botany](http://algorithmicbotany.org/papers/abop/abop.pdf))
 
-* + - rotate positively around the z-axis
-* - - rotate negatively around the z-axis
+* \+ - rotate positively around the z-axis
+* \- - rotate negatively around the z-axis
 * & - rotate positively around the x-axis 
-* ^ - rotate negatively around the x-axis
+* ^- rotate negatively around the x-axis
 * = - rotate positively around the y-axis (Because \ is used as a formatting character)
 * / - rotate negatively around the y-axis
 

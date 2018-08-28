@@ -12,27 +12,42 @@
 {
 	angle: {x: 22.5, y: 22.5, z: 22.5},
 	forwardMovement: 15,
-	branchWidth: 1,
-	iterations: 6,
+	branchWidth: 2,
+	iterations: 7,
 	axiom: ['A'],
-	useLengthAsWidth: true,
+	useLengthAsWidth: false,
+	lengths: [
+		1,
+		0.8,
+		0.6,
+		0.4
+	],
+	widths: [
+		1,
+		0.5,
+		0.1,
+		0.05
+	],
 	rules: {
 		global: {
 		},
 		0: {
-			'A': 'FA'
+			'A': '1FA'
 		},
 		1: {
-			'A': 'FA'
+			'A': '1FA'
 		},
 		2: {
-			'A': '[&FLA]/////[&FLA]///////[&FLA]'
+			'A': '[2&FLA]/////[2&FLA]///////[2&FLA]'
 		},
 		3: {
-			'A': '[&FLA]/////[&FLA]///////[&FLA]'
+			'A': '[2&FLA]/////[2&FAFLA]///////[2&FLA]'
 		},
 		4: {
-			'A': '[&[FL===L]]/////[&[FL===L]]///////[&[FL===L]]'
+			'A': '[&3FA]/////[&3FAFA]///////[&3FA]'
+		},
+		5: {
+			'A': '[&[4F^L===&3L]]/////[&[4FL===L]]///////[&[4FL===L]]'
 		},
 		final: {
 			'L': '[/`[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]]`'
@@ -70,6 +85,8 @@ Final rules will have higher precedence than anything else.
 * 2 - Sets segment length to 60%
 * 3 - Sets segment length to 40%
 * 4 - Sets segment length to 20%
+
+(These are also configurable, these are just nice values)
 
 #### Alternatively, the flag ``useLengthAsWidth`` can be given.
 

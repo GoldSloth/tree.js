@@ -58,7 +58,16 @@ function rotateAroundAxis(currentState, forwardMovement) {
     return lineToTransform.lPrime
 }
 
-exports.Tree = function(axiom, rules, iterations, angle, forwardMovement, branchWidth, useLengthAsWidth) {
+exports.Tree = function(axiom,
+        rules, 
+        iterations,
+        angle,
+        forwardMovement,
+        branchWidth,
+        useLengthAsWidth,
+        lengths,
+        widths,
+    ) {
     this.type = 'Tree'
     this.axiom = axiom
     this.rules = rules
@@ -67,6 +76,8 @@ exports.Tree = function(axiom, rules, iterations, angle, forwardMovement, branch
     this.forwardMovement = forwardMovement
     this.branchWidth = branchWidth
     this.useLengthAsWidth = useLengthAsWidth
+    this.lengths = lengths
+    this.widths = widths
     
     this.instructions = ['No instructions set']
     this.branches = []
@@ -162,28 +173,42 @@ exports.Tree = function(axiom, rules, iterations, angle, forwardMovement, branch
                 case '`':
                     leafMode = (!leafMode)
                     break
+
+
+                    
                 case '1':
-                    bLength = this.forwardMovement
+                    bLength = this.forwardMovement * this.lengths[0]
                     if (this.useLengthAsWidth) {
-                        bWidth = this.branchWidth
+                        bWidth = this.branchWidth * this.lengths[0]
+                    } else {
+                        bWidth = this.branchWidth * this.widths[0]
                     }
                     break
+
                 case '2':
-                    bLength = this.forwardMovement * 0.6
+                    bLength = this.forwardMovement * this.lengths[1]
                     if (this.useLengthAsWidth) {
-                        bWidth = this.branchWidth * 0.5
+                        bWidth = this.branchWidth * this.lengths[1]
+                    } else {
+                        bWidth = this.branchWidth * this.widths[1]
                     }
                     break
+
                 case '3':
-                    bLength = this.forwardMovement * 0.4
+                    bLength = this.forwardMovement * this.lengths[2]
                     if (this.useLengthAsWidth) {
-                        bWidth = this.branchWidth * 0.10
+                        bWidth = this.branchWidth * this.lengths[2]
+                    } else {
+                        bWidth = this.branchWidth * this.widths[2]
                     }
                     break
+
                 case '4':
-                    bLength = this.forwardMovement * 0.2
+                    bLength = this.forwardMovement * this.lengths[3]
                     if (this.useLengthAsWidth) {
-                        bWidth = this.branchWidth * 0.05
+                        bWidth = this.branchWidth * this.lengths[3]
+                    } else {
+                        bWidth = this.branchWidth * this.widths[3]
                     }
                     break
                 

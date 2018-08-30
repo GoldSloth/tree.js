@@ -103,8 +103,10 @@ exports.Tree = function(axiom,
             }
             tree = tree2
             tree = [].concat.apply([], tree)
+            console.log(tree)
         }
         this.instructions = tree
+        console.log(JSON.stringify(tree))
     }
 
     this.makeBranches = function() {
@@ -175,7 +177,7 @@ exports.Tree = function(axiom,
                     break
 
 
-                    
+
                 case '1':
                     bLength = this.forwardMovement * this.lengths[0]
                     if (this.useLengthAsWidth) {

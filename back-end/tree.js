@@ -51,20 +51,20 @@ function rotateAroundAxis(currentState, forwardMovement) {
         currentState.position, 
         currentState.position.plus(new vv3.Vector(0, forwardMovement, 0))
     )
-
+    
     lineToTransform = lineToTransform.rotateAroundLine(xRotator, currentState.direction.x)
-    lineToTransform = lineToTransform.rotateAroundLine(yRotator, currentState.direction.y)
     lineToTransform = lineToTransform.rotateAroundLine(zRotator, currentState.direction.z)
+    lineToTransform = lineToTransform.rotateAroundLine(yRotator, currentState.direction.y)
     return lineToTransform.lPrime
 }
 
-exports.Tree = function(axiom,
+exports.Tree = function(
+        axiom,
         rules, 
         iterations,
         angle,
         forwardMovement,
         branchWidth,
-        useLengthAsWidth,
         lengths,
         widths,
     ) {
@@ -75,7 +75,6 @@ exports.Tree = function(axiom,
     this.angle = angle
     this.forwardMovement = forwardMovement
     this.branchWidth = branchWidth
-    this.useLengthAsWidth = useLengthAsWidth
     this.lengths = lengths
     this.widths = widths
     
@@ -103,21 +102,17 @@ exports.Tree = function(axiom,
             }
             tree = tree2
             tree = [].concat.apply([], tree)
-            console.log(tree)
         }
         this.instructions = tree
-        console.log(JSON.stringify(tree))
     }
 
     this.makeBranches = function() {
+        var progression = 0
         var bWidth = this.branchWidth
         var bLength = this.forwardMovement
         var currentState = new State(new vv3.Vector(0,0,0), new vv3.Vector(0,0,0))
         var stateToStore = new State(new vv3.Vector(0,0,0), new vv3.Vector(0,0,0))
         var stateStack = []
-        var rDirection
-        var x
-        var y
         var newPosition
         var leafMode = false
         this.instructions.forEach(function(instruction) {
@@ -176,42 +171,16 @@ exports.Tree = function(axiom,
                     leafMode = (!leafMode)
                     break
 
-
-
-                case '1':
-                    bLength = this.forwardMovement * this.lengths[0]
-                    if (this.useLengthAsWidth) {
-                        bWidth = this.branchWidth * this.lengths[0]
-                    } else {
-                        bWidth = this.branchWidth * this.widths[0]
-                    }
+                case '<':
+                    progression++
+                    bLength = this.forwardMovement * this.lengths[progression]
+                    bWidth = this.branchWidth * this.widths[progression]
                     break
-
-                case '2':
-                    bLength = this.forwardMovement * this.lengths[1]
-                    if (this.useLengthAsWidth) {
-                        bWidth = this.branchWidth * this.lengths[1]
-                    } else {
-                        bWidth = this.branchWidth * this.widths[1]
-                    }
-                    break
-
-                case '3':
-                    bLength = this.forwardMovement * this.lengths[2]
-                    if (this.useLengthAsWidth) {
-                        bWidth = this.branchWidth * this.lengths[2]
-                    } else {
-                        bWidth = this.branchWidth * this.widths[2]
-                    }
-                    break
-
-                case '4':
-                    bLength = this.forwardMovement * this.lengths[3]
-                    if (this.useLengthAsWidth) {
-                        bWidth = this.branchWidth * this.lengths[3]
-                    } else {
-                        bWidth = this.branchWidth * this.widths[3]
-                    }
+                    
+                case '>':
+                    if (progression>0){ progression-- }
+                    bLength = this.forwardMovement * this.lengths[progression]
+                    bWidth = this.branchWidth * this.widths[progression]
                     break
                 
             }
@@ -233,6 +202,7 @@ exports.Tree = function(axiom,
                 'w': x[1]
             }
         })
+        console.log(this.branches)
     }
 
     this.makeTree = function() {

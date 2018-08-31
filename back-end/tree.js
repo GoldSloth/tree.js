@@ -51,14 +51,23 @@ function rotateAroundAxis(currentState, forwardMovement) {
         currentState.position, 
         currentState.position.plus(new vv3.Vector(0, forwardMovement, 0))
     )
-
+    
     lineToTransform = lineToTransform.rotateAroundLine(xRotator, currentState.direction.x)
-    lineToTransform = lineToTransform.rotateAroundLine(yRotator, currentState.direction.y)
     lineToTransform = lineToTransform.rotateAroundLine(zRotator, currentState.direction.z)
+    lineToTransform = lineToTransform.rotateAroundLine(yRotator, currentState.direction.y)
     return lineToTransform.lPrime
 }
 
-exports.Tree = function(axiom, rules, iterations, angle, forwardMovement, branchWidth, useLengthAsWidth) {
+exports.Tree = function(
+        axiom,
+        rules, 
+        iterations,
+        angle,
+        forwardMovement,
+        branchWidth,
+        lengths,
+        widths,
+    ) {
     this.type = 'Tree'
     this.axiom = axiom
     this.rules = rules
@@ -66,7 +75,8 @@ exports.Tree = function(axiom, rules, iterations, angle, forwardMovement, branch
     this.angle = angle
     this.forwardMovement = forwardMovement
     this.branchWidth = branchWidth
-    this.useLengthAsWidth = useLengthAsWidth
+    this.lengths = lengths
+    this.widths = widths
     
     this.instructions = ['No instructions set']
     this.branches = []
@@ -97,14 +107,12 @@ exports.Tree = function(axiom, rules, iterations, angle, forwardMovement, branch
     }
 
     this.makeBranches = function() {
+        var progression = 0
         var bWidth = this.branchWidth
         var bLength = this.forwardMovement
         var currentState = new State(new vv3.Vector(0,0,0), new vv3.Vector(0,0,0))
         var stateToStore = new State(new vv3.Vector(0,0,0), new vv3.Vector(0,0,0))
         var stateStack = []
-        var rDirection
-        var x
-        var y
         var newPosition
         var leafMode = false
         this.instructions.forEach(function(instruction) {
@@ -162,29 +170,17 @@ exports.Tree = function(axiom, rules, iterations, angle, forwardMovement, branch
                 case '`':
                     leafMode = (!leafMode)
                     break
-                case '1':
-                    bLength = this.forwardMovement
-                    if (this.useLengthAsWidth) {
-                        bWidth = this.branchWidth
-                    }
+
+                case '<':
+                    progression++
+                    bLength = this.forwardMovement * this.lengths[progression]
+                    bWidth = this.branchWidth * this.widths[progression]
                     break
-                case '2':
-                    bLength = this.forwardMovement * 0.5
-                    if (this.useLengthAsWidth) {
-                        bWidth = this.branchWidth * 0.5
-                    }
-                    break
-                case '3':
-                    bLength = this.forwardMovement * 0.25
-                    if (this.useLengthAsWidth) {
-                        bWidth = this.branchWidth * 0.25
-                    }
-                    break
-                case '4':
-                    bLength = this.forwardMovement * 0.125
-                    if (this.useLengthAsWidth) {
-                        bWidth = this.branchWidth * 0.125
-                    }
+                    
+                case '>':
+                    if (progression>0){ progression-- }
+                    bLength = this.forwardMovement * this.lengths[progression]
+                    bWidth = this.branchWidth * this.widths[progression]
                     break
                 
             }
@@ -206,6 +202,7 @@ exports.Tree = function(axiom, rules, iterations, angle, forwardMovement, branch
                 'w': x[1]
             }
         })
+        console.log(this.branches)
     }
 
     this.makeTree = function() {

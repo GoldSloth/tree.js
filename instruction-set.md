@@ -1,5 +1,5 @@
 ## Instructions
-*The tree config sent as a JSON request to the back-end needs to contain the following properties:
+#### The tree config sent as a JSON request to the back-end needs to contain the following properties:
 * angle - the degrees of rotation around an axis
 * forwardMovement - the length of each branch segment
 * iterations - the number of times the algorithm with run (complexity)
@@ -12,27 +12,42 @@
 {
 	angle: {x: 22.5, y: 22.5, z: 22.5},
 	forwardMovement: 15,
-	branchWidth: 1,
-	iterations: 6,
+	branchWidth: 2,
+	iterations: 7,
 	axiom: ['A'],
-	useLengthAsWidth: true,
+	useLengthAsWidth: false,
+	lengths: [
+		1,
+		0.8,
+		0.6,
+		0.4
+	],
+	widths: [
+		1,
+		0.5,
+		0.1,
+		0.05
+	],
 	rules: {
 		global: {
 		},
 		0: {
-			'A': 'FA'
+			'A': '1FA'
 		},
 		1: {
-			'A': 'FA'
+			'A': '1FA'
 		},
 		2: {
-			'A': '[&FLA]/////[&FLA]///////[&FLA]'
+			'A': '[2&FLA]/////[2&FLA]///////[2&FLA]'
 		},
 		3: {
-			'A': '[&FLA]/////[&FLA]///////[&FLA]'
+			'A': '[2&FLA]/////[2&FAFLA]///////[2&FLA]'
 		},
 		4: {
-			'A': '[&[FL===L]]/////[&[FL===L]]///////[&[FL===L]]'
+			'A': '[&3FA]/////[&3FAFA]///////[&3FA]'
+		},
+		5: {
+			'A': '[&[4F^L===&3L]]/////[&[4FL===L]]///////[&[4FL===L]]'
 		},
 		final: {
 			'L': '[/`[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]]`'
@@ -55,10 +70,10 @@ Final rules will have higher precedence than anything else.
 
 (Fitting with the paper: [Algorthmic Botany](http://algorithmicbotany.org/papers/abop/abop.pdf))
 
-* + - rotate positively around the z-axis
-* - - rotate negatively around the z-axis
+* \+ - rotate positively around the z-axis
+* \- - rotate negatively around the z-axis
 * & - rotate positively around the x-axis 
-* ^ - rotate negatively around the x-axis
+* ^- rotate negatively around the x-axis
 * = - rotate positively around the y-axis (Because \ is used as a formatting character)
 * / - rotate negatively around the y-axis
 
@@ -66,17 +81,16 @@ Final rules will have higher precedence than anything else.
 
 * ` - leaf declaration (Vertices will be sent in the leaf section of the output, as opposed to the default branches)
 
-* 1 - Sets segment length to 100%
-* 2 - Sets segment length to 50%
-* 3 - Sets segment length to 25%
-* 4 - Sets segment length to 12.5%
+* < - Forward progression in tree (Length shorter, Width narrower)
+* > - Backwards progression in tree (Length longer, Width wider)
 
-Alternatively, the flag ``useLengthAsWidth`` can be given.
+#### Important: You must have as many progressions defined as iterations, Otherwise weird things happen
 
-* 5 - Unused
+| Progression | Width | Length |
+|-------------|-------|--------|
+| 0           | 100%  | 100%   |
+| 1           | 50%   | 60%    |
+| 2           | 10%   | 40%    |
+| 3           | 5%    | 20%    |
 
-***This section is currently not implemented
-* 6 - sets branch width to 12.5%
-* 7 - sets branch width to 25%
-* 8 - sets branch width to 50%
-* 9 - sets branch width to 100%***
+(These are fairly standard values, others can be provided in the argument list)

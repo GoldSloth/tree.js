@@ -38,9 +38,9 @@ exports.Position = class {
 exports.Direction = class {
     constructor(H, L, U) {
         if (!arguments.length) {
-            this.H = math.matrix([[0], [1], [0]])
+            this.H = math.matrix([[1], [0], [0]])
             this.L = math.matrix([[0], [0], [1]]) 
-            this.U = math.matrix([[1], [0], [0]]) 
+            this.U = math.matrix([[0], [1], [0]]) 
         } else {
             this.H = math.clone(H)
             this.L = math.clone(L)
@@ -48,40 +48,9 @@ exports.Direction = class {
         }
     }
 
-    rotateX (angle) {
-        var sinTheta = Math.sin(angle * (180 / Math.PI))
-        var cosTheta = Math.cos(angle * (180 / Math.PI))
-        var RX = math.matrix(
-            [
-                [ cosTheta, sinTheta, 0],
-                [-sinTheta, cosTheta, 0],
-                [ 0       , 0       , 1]
-            ])
-        
-        this.H = math.multiply(RX, this.H)
-        this.L = math.multiply(RX, this.L)
-        this.U = math.multiply(RX, this.U)
-    }
-
-
-    rotateY (angle) {
-        var sinTheta = Math.sin(angle * (180 / Math.PI))
-        var cosTheta = Math.cos(angle * (180 / Math.PI))
-        var RY = math.matrix(
-            [
-                [ cosTheta, 0, -sinTheta],
-                [ 0       , 1, 0        ],
-                [ sinTheta, 0,  cosTheta]
-            ])
-        
-        this.H = math.multiply(RY, this.H)
-        this.L = math.multiply(RY, this.L)
-        this.U = math.multiply(RY, this.U)
-    }
-
     rotateZ (angle) {
-        var sinTheta = Math.sin(angle * (180 / Math.PI))
-        var cosTheta = Math.cos(angle * (180 / Math.PI))
+        var sinTheta = Math.sin(angle * (Math.PI/ 180))
+        var cosTheta = Math.cos(angle * (Math.PI/ 180))
         var RZ = math.matrix(
             [
                 [ cosTheta, sinTheta, 0],
@@ -94,14 +63,46 @@ exports.Direction = class {
         this.U = math.multiply(RZ, this.U)
     }
 
+
+    rotateY (angle) {
+        var sinTheta = Math.sin(angle * (Math.PI/ 180))
+        var cosTheta = Math.cos(angle * (Math.PI/ 180))
+        var RY = math.matrix(
+            [
+                [ cosTheta, 0, -sinTheta],
+                [ 0       , 1, 0        ],
+                [ sinTheta, 0,  cosTheta]
+            ])
+        
+        this.H = math.multiply(RY, this.H)
+        this.L = math.multiply(RY, this.L)
+        this.U = math.multiply(RY, this.U)
+    }
+
+    rotateX (angle) {
+        var sinTheta = Math.sin(angle * (Math.PI/ 180))
+        console.log(sinTheta)
+        var cosTheta = Math.cos(angle * (Math.PI/ 180))
+        var RX = math.matrix(
+            [
+                [ 1, 0       , 0        ],
+                [ 0, cosTheta, -sinTheta],
+                [ 0, sinTheta,  cosTheta]
+            ])
+        
+        this.H = math.multiply(RX, this.H)
+        this.L = math.multiply(RX, this.L)
+        this.U = math.multiply(RX, this.U)
+    }
+
     makeClone() {
         return {H: math.clone(this.H), L: math.clone(this.L), U: math.clone(this.U)}
     }
 
     extend(length) {
-        var x = (math.subset(this.H, math.index(0, 0))*length)
-        var y = (math.subset(this.H, math.index(1, 0))*length)
-        var z = (math.subset(this.H, math.index(2, 0))*length)
+        var x = (math.subset(this.U, math.index(0, 0))*length)
+        var y = (math.subset(this.U, math.index(1, 0))*length)
+        var z = (math.subset(this.U, math.index(2, 0))*length)
         return new exports.Position(x, y, z)
     }
 

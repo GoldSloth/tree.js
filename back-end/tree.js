@@ -96,7 +96,7 @@ exports.Tree = function(
                     newPosition = new Position(
                         extension.x + newPosition.x, 
                         extension.y + newPosition.y,
-                        extension.y + newPosition.y)
+                        extension.z + newPosition.z)
                     if (leafMode) {
                         this.leaves.push({p0: currentPosition.makeObj(), p1: newPosition.makeObj()})
                     } else {

@@ -15,11 +15,14 @@
 
             var scene = new THREE.Scene();
             var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 100000 );
-            
+
             var renderer = new THREE.WebGLRenderer();
             renderer.setSize( window.innerWidth, window.innerHeight );
             document.body.appendChild( renderer.domElement );
             
+            var axesHelper = new THREE.AxesHelper( 5 );
+            scene.add( axesHelper );
+
             var controls = new THREE.OrbitControls( camera );
 
             camera.position.set(0, 500, 100);
@@ -193,6 +196,19 @@
                             'L': '[`^[ff][/ff][//ff][///ff]`]'
                         }
                     }
+                },
+
+                {
+                    angle: {x: 25, y: 25, z: 25},
+                    forwardMovement: 15,
+                    branchWidth: 1,
+                    iterations: 2,
+                    axiom: ['A'],
+                    rules: {
+                        global: {
+                            'A': 'F-A'
+                        }
+                    }
                 }
             ]
 
@@ -214,7 +230,7 @@
                     xmlhttp.open("POST", "https://tranquil-sands-18396.herokuapp.com", true)
                 }   
                 xmlhttp.setRequestHeader("Content-Type", "application/json")
-                const treeConfig = presets[1]
+                const treeConfig = presets[2]
                 xmlhttp.send(JSON.stringify(treeConfig))
             }
             getBranches()

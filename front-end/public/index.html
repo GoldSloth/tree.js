@@ -104,8 +104,8 @@
                 var leafMaterial = new THREE.LineBasicMaterial({color: 0x44ff44})
                 leaves.forEach(function(line) {
                     var leafGeom = new THREE.Geometry()
-                    leafGeom.vertices.push(new THREE.Vector3(line.l0.x, line.l0.y, line.l0.z))
-                    leafGeom.vertices.push(new THREE.Vector3(line.lPrime.x, line.lPrime.y, line.lPrime.z))
+                    leafGeom.vertices.push(new THREE.Vector3(line.p0.x, line.p0.y, line.p0.z))
+                    leafGeom.vertices.push(new THREE.Vector3(line.p1.x, line.p1.y, line.p1.z))
                     
                     var singleLine = new THREE.Line(leafGeom, leafMaterial)
                     lineTreeGroup.add(singleLine)

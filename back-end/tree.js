@@ -87,25 +87,29 @@ exports.Tree = function(
         var currentPosition = new Position(0, 0, 0)
         var currentDirection = new Direction()
         var stateStack = []
-        var newPosition
+        var newPosition = new Position()
         var leafMode = false
         this.instructions.forEach(function(instruction) {
             switch(instruction) {
                 case 'F':
-                    newPosition = currentDirection.extend(bLength)
+                    var extension = currentDirection.extend(bLength)
+                    newPosition = new Position(
+                        extension.x + newPosition.x, 
+                        extension.y + newPosition.y,
+                        extension.y + newPosition.y)
                     if (leafMode) {
-                        this.leaves.push({p0: currentPosition.makeClone(), p1: newPosition.makeClone()})
+                        this.leaves.push({p0: currentPosition.makeObj(), p1: newPosition.makeObj()})
                     } else {
-                        this.leaves.push({p0: currentPosition.makeClone(), p1: newPosition.makeClone(), w: bWidth})
+                        this.branches.push({p0: currentPosition.makeObj(), p1: newPosition.makeObj(), w: bWidth})
                     }
                     currentPosition.makeFromClone(newPosition.makeClone())
                     break
                 case 'f':
                     newPosition = currentDirection.extend(this.forwardMovement*0.1)
                     if (leafMode) {
-                        this.leaves.push({p0: currentPosition.makeClone(), p1: newPosition.makeClone()})
+                        this.leaves.push({p0: currentPosition.makeObj(), p1: newPosition.makeObj()})
                     } else {
-                        this.leaves.push({p0: currentPosition.makeClone(), p1: newPosition.makeClone(), w: bWidth})
+                        this.branches.push({p0: currentPosition.makeObj(), p1: newPosition.makeObj(), w: bWidth})
                     }
                     currentPosition.makeFromClone(newPosition.makeClone())
                     break
@@ -159,23 +163,24 @@ exports.Tree = function(
                 
             }
         }, this)
-        this.branches = this.branches.map(x => {
-            return {
-                'p0': 
-                {
-                    'x': x.p0.x,
-                    'y': x.p0.y,
-                    'z': x.p0.z
-                },
-                'p1': 
-                {
-                    'x': x.p1.x, 
-                    'y': x.p1.y, 
-                    'z': x.p1.z
-                },
-                'w': x.w
-            }
-        })
+        // this.branches = this.branches.map(x => {
+        //     return {
+        //         'p0': 
+        //         {
+        //             'x': x.p0.x,
+        //             'y': x.p0.y,
+        //             'z': x.p0.z
+        //         },
+        //         'p1': 
+        //         {
+        //             'x': x.p1.x, 
+        //             'y': x.p1.y, 
+        //             'z': x.p1.z
+        //         },
+        //         'w': x.w
+        //     }
+        // })
+        console.log('Branches: ')
         console.log(this.branches)
     }
 

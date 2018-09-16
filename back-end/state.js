@@ -1,5 +1,40 @@
 const math = require('mathjs')
 
+exports.Position = class {
+    constructor(x, y, z) {
+        if (!arguments.length) {
+            this.position = math.matrix([0, 0, 0])
+        } else {
+            this.position = math.matrix([x, y, z])
+        }
+    }
+
+    get x() {
+        return math.subset(this.position, math.index(0))
+    }
+
+    get y() {
+        return math.subset(this.position, math.index(1))
+    }
+
+    get z() {
+        return math.subset(this.position, math.index(2))
+    }
+
+    makeClone() {
+        return math.clone(this.position)
+    }
+
+    makeFromClone(cloneablePosition) {
+        this.position = math.clone(cloneablePosition)
+    }
+
+    makeObj() {
+        return {'x': this.x, 'y': this.y, 'z': this.z}
+    }
+}
+
+
 exports.Direction = class {
     constructor(H, L, U) {
         if (!arguments.length) {
@@ -59,61 +94,16 @@ exports.Direction = class {
         this.U = math.multiply(RZ, this.U)
     }
 
-    get makeClone () {
+    makeClone() {
         return {H: math.clone(this.H), L: math.clone(this.L), U: math.clone(this.U)}
     }
 
     extend(length) {
-        var x = (math.subset(this.H, math.index(0))*length)
-        var y = (math.subset(this.H, math.index(1))*length)
-        var z = (math.subset(this.H, math.index(2))*length)
-        return new Position(x, y, z)
-    }
-
-    get H() {
-        return math.clone(this.H)
-    }
-
-    get L() {
-        return math.clone(this.U)
-    }
-
-    get L() {
-        return math.clone(this.L)
+        var x = (math.subset(this.H, math.index(0, 0))*length)
+        var y = (math.subset(this.H, math.index(1, 0))*length)
+        var z = (math.subset(this.H, math.index(2, 0))*length)
+        return new exports.Position(x, y, z)
     }
 
 }
 
-exports.Position = class {
-    constructor(x, y, z) {
-        if (!arguments.length) {
-            this.position = math.matrix([0, 0, 0])
-        } else {
-            this.position = math.matrix([x, y, z])
-        }
-    }
-
-    get x() {
-        return math.subset(this.position, math.index(0))
-    }
-
-    get y() {
-        return math.subset(this.position, math.index(1))
-    }
-
-    get z() {
-        return math.subset(this.position, math.index(2))
-    }
-
-    add(secondPos) {
-        this.position = math.clone(math.add(this.position, secondPos))
-    }
-
-    makeClone() {
-        return math.clone(this.position)
-    }
-
-    makeFromClone(cloneablePosition) {
-        this.position = math.clone(cloneablePosition)
-    }
-}

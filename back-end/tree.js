@@ -120,16 +120,16 @@ exports.Tree = function(
                     currentDirection.rotateX(-this.angle.x)
                     break
                 case '&':
-                    currentDirection.rotateY(this.angle.y)
+                    currentDirection.rotateZ(this.anglezy)
                     break    
                 case '^':
-                    currentDirection.rotateY(-this.angle.y)
+                    currentDirection.rotateZ(-this.angle.z)
                     break
                 case '=':
-                    currentDirection.rotateZ(this.angle.z)
+                    currentDirection.rotateY(this.angle.y)
                     break    
                 case '/':
-                    currentDirection.rotateZ(-this.angle.z)
+                    currentDirection.rotateY(-this.angle.y)
                     break
                 case '|':
                     currentDirection.rotateX(180)

@@ -56,16 +56,16 @@ exports.Direction = class {
         var LZ = math.subset(axisMap, math.index(2, 0))
 
         var t00 = cosTheta + ((LX*LX)*(1-cosTheta))
-        var t01 = (LX*LY)*(1-cosTheta) - (LZ*sinTheta)
-        var t02 = (LX*LZ)*(1-cosTheta) + (LY*sinTheta)
+        var t01 = ((LX * LY) * (1 - cosTheta)) - (LZ * sinTheta)
+        var t02 = ((LX * LZ) * (1 - cosTheta)) + (LY * sinTheta)
 
-        var t10 = (LY*LX)*(1-cosTheta) + (LZ*sinTheta)
-        var t11 = cosTheta + (LY*LY)*(1-cosTheta)
-        var t12 = (LY*LZ)*(1-cosTheta) - (LX*sinTheta)
+        var t10 = ((LY * LX) * (1 - cosTheta)) + (LZ * sinTheta)
+        var t11 = cosTheta + ((LY * LY) * (1 - cosTheta))
+        var t12 = ((LY * LZ) * (1 - cosTheta)) - (LX * sinTheta)
 
-        var t20 = (LZ*LX)*(1-cosTheta) - (LY * sinTheta)
-        var t21 = (LZ*LY)*(1-cosTheta) + (LX*sinTheta)
-        var t22 = cosTheta + (LZ*LZ)*(1-cosTheta)
+        var t20 = ((LZ * LX) * (1 - cosTheta)) - (LY * sinTheta)
+        var t21 = ((LZ * LY) * (1 - cosTheta)) + (LX * sinTheta)
+        var t22 = cosTheta + ((LZ * LZ) * (1 - cosTheta))
         
         var RL = math.matrix(
             [

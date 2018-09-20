@@ -48,51 +48,48 @@ exports.Direction = class {
         }
     }
 
-    rotateZ (angle) {
+    _internalRotation (angle, axisMap) {
         var sinTheta = Math.sin(angle * (Math.PI/ 180))
         var cosTheta = Math.cos(angle * (Math.PI/ 180))
-        var RZ = math.matrix(
+        var LX = math.subset(axisMap, math.index(0, 0))
+        var LY = math.subset(axisMap, math.index(1, 0))
+        var LZ = math.subset(axisMap, math.index(2, 0))
+
+        var t00 = cosTheta + ((LX*LX)*(1-cosTheta))
+        var t01 = (LX*LY)*(1-cosTheta) - (LZ*sinTheta)
+        var t02 = (LX*LZ)*(1-cosTheta) + (LY*sinTheta)
+
+        var t10 = (LY*LX)*(1-cosTheta) + (LZ*sinTheta)
+        var t11 = cosTheta + (LY*LY)*(1-cosTheta)
+        var t12 = (LY*LZ)*(1-cosTheta) - (LX*sinTheta)
+
+        var t20 = (LZ*LX)*(1-cosTheta) - (LY * sinTheta)
+        var t21 = (LZ*LY)*(1-cosTheta) + (LX*sinTheta)
+        var t22 = cosTheta + (LZ*LZ)*(1-cosTheta)
+        
+        var RL = math.matrix(
             [
-                [ cosTheta, sinTheta, 0],
-                [-sinTheta, cosTheta, 0],
-                [ 0       , 0       , 1]
+                [ t00, t01, t02],
+                [ t10, t11, t12],
+                [ t20, t21, t22]
             ])
         
-        this.H = math.multiply(RZ, this.H)
-        this.L = math.multiply(RZ, this.L)
-        this.U = math.multiply(RZ, this.U)
+        this.H = math.multiply(RL, this.H)
+        this.L = math.multiply(RL, this.L)
+        this.U = math.multiply(RL, this.U)
+    }
+
+    rotateZ (angle) {
+        this._internalRotation(angle, this.L)
     }
 
 
     rotateY (angle) {
-        var sinTheta = Math.sin(angle * (Math.PI/ 180))
-        var cosTheta = Math.cos(angle * (Math.PI/ 180))
-        var RY = math.matrix(
-            [
-                [ cosTheta, 0, -sinTheta],
-                [ 0       , 1, 0        ],
-                [ sinTheta, 0,  cosTheta]
-            ])
-        
-        this.H = math.multiply(RY, this.H)
-        this.L = math.multiply(RY, this.L)
-        this.U = math.multiply(RY, this.U)
+        this._internalRotation(angle, this.U)
     }
 
     rotateX (angle) {
-        var sinTheta = Math.sin(angle * (Math.PI/ 180))
-        console.log(sinTheta)
-        var cosTheta = Math.cos(angle * (Math.PI/ 180))
-        var RX = math.matrix(
-            [
-                [ 1, 0       , 0        ],
-                [ 0, cosTheta, -sinTheta],
-                [ 0, sinTheta,  cosTheta]
-            ])
-        
-        this.H = math.multiply(RX, this.H)
-        this.L = math.multiply(RX, this.L)
-        this.U = math.multiply(RX, this.U)
+        this._internalRotation(angle, this.H)
     }
 
     makeClone() {

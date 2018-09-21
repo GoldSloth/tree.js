@@ -11,7 +11,7 @@
 * lengths - An array defining a multiplier for the branch length for each progression along a tree
 * widths - An array defining a multiplier for the branch width for each progression along a tree
 
-* rules - See table below
+* rules - See table below:
 
 | Rule Type |         Executed When         | Precedence |       Typical Usage      |
 |:---------:|:-----------------------------:|:----------:|:------------------------:|

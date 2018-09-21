@@ -223,7 +223,9 @@
                         drawBranchesWhenReady()
                     }
                 }
-                var dev = false
+
+                const dev = true
+
                 if (dev) {
                     xmlhttp.open("POST", "http://localhost:3001", true)
                 } else {

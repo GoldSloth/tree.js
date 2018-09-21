@@ -189,7 +189,7 @@ exports.Tree = function(
     this.makeTree = function() {
         this.makeInstructions()
         this.makeBranches()
-        logWrite('Tree Instructions: ' + this.instructions + '\n' + 'Branches: ' + this.branches, 'tree-log.log')
+        logWrite(('Tree Instructions: ' + JSON.stringify(this.instructions) + '\n' + 'Branches: ' + JSON.stringify(this.branches)), 'tree-log.log')
         return {branches: this.branches, leaves: this.leaves}
     }
 }

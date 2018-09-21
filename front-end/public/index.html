@@ -206,7 +206,7 @@
                     axiom: ['A'],
                     rules: {
                         global: {
-                            'A': 'F[+F][F]'
+                            'A': 'F[+F][-F]'
                         }
                     }
                 }
@@ -230,7 +230,7 @@
                     xmlhttp.open("POST", "https://tranquil-sands-18396.herokuapp.com", true)
                 }   
                 xmlhttp.setRequestHeader("Content-Type", "application/json")
-                const treeConfig = presets[2]
+                const treeConfig = presets[1]
                 xmlhttp.send(JSON.stringify(treeConfig))
             }
             getBranches()

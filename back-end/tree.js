@@ -89,14 +89,15 @@ exports.Tree = function(
         var stateStack = []
         var newPosition = new Position()
         var leafMode = false
+        var extension
         this.instructions.forEach(function(instruction) {
             switch(instruction) {
                 case 'F':
-                    var extension = currentDirection.extend(bLength)
+                    extension = currentDirection.extend(bLength)
                     newPosition = new Position(
-                        extension.x + newPosition.x, 
-                        extension.y + newPosition.y,
-                        extension.z + newPosition.z)
+                        (extension.x + currentPosition.x), 
+                        (extension.y + currentPosition.y),
+                        (extension.z + currentPosition.z))
                     if (leafMode) {
                         this.leaves.push({p0: currentPosition.makeObj(), p1: newPosition.makeObj()})
                     } else {
@@ -105,7 +106,13 @@ exports.Tree = function(
                     currentPosition.makeFromClone(newPosition.makeClone())
                     break
                 case 'f':
-                    newPosition = currentDirection.extend(this.forwardMovement*0.1)
+                    var extension =  currentDirection.extend(this.forwardMovement * 0.01)
+
+                    newPosition = new Position(
+                        (extension.x + newPosition.x), 
+                        (extension.y + newPosition.y),
+                        (extension.z + newPosition.z))
+
                     if (leafMode) {
                         this.leaves.push({p0: currentPosition.makeObj(), p1: newPosition.makeObj()})
                     } else {
@@ -120,7 +127,7 @@ exports.Tree = function(
                     currentDirection.rotateX(-this.angle.x)
                     break
                 case '&':
-                    currentDirection.rotateZ(this.anglezy)
+                    currentDirection.rotateZ(this.angle.z)
                     break    
                 case '^':
                     currentDirection.rotateZ(-this.angle.z)
@@ -163,25 +170,8 @@ exports.Tree = function(
                 
             }
         }, this)
-        // this.branches = this.branches.map(x => {
-        //     return {
-        //         'p0': 
-        //         {
-        //             'x': x.p0.x,
-        //             'y': x.p0.y,
-        //             'z': x.p0.z
-        //         },
-        //         'p1': 
-        //         {
-        //             'x': x.p1.x, 
-        //             'y': x.p1.y, 
-        //             'z': x.p1.z
-        //         },
-        //         'w': x.w
-        //     }
-        // })
-        console.log('Branches: ')
-        console.log(this.branches)
+        // console.log('Branches: ')
+        // console.log(this.branches)
     }
 
     this.makeTree = function() {

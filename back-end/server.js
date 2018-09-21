@@ -26,7 +26,9 @@ const server = http.createServer(function(request, response) {
         treeConfig.forwardMovement,
         treeConfig.branchWidth,
         treeConfig.lengths,
-        treeConfig.widths)
+        treeConfig.widths,
+        treeConfig.leafAngle,
+        treeConfig.leafLength)
       response.end(JSON.stringify(requestedBranches.makeTree()))
     })
   } else {

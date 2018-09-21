@@ -1,5 +1,5 @@
-const { State } = require('./state.js')
-const vv3 = require('vanilla-vectors-3d')
+const math = require('mathjs')
+const { Position, Direction } = require('./state.js')
 const fs = require('fs')
 
 function logWrite(message, filename) {
@@ -30,32 +30,6 @@ function applyRules(letter, rules, iteration, final) {
     }
     return letter
 
-}
-
-
-function rotateAroundAxis(currentState, forwardMovement) {
-    var xRotator = new vv3.Line(
-        currentState.position.plus(new vv3.Vector(0,0,1)), 
-        currentState.position.plus(new vv3.Vector(0,0,-1))
-    )
-    var yRotator = new vv3.Line(
-        currentState.position.plus(new vv3.Vector(0,1,0)), 
-        currentState.position.plus(new vv3.Vector(0,-1,0))
-    )
-    var zRotator = new vv3.Line(
-        currentState.position.plus(new vv3.Vector(1,0,0)), 
-        currentState.position.plus(new vv3.Vector(-1,0,0))
-    )
-
-    var lineToTransform = new vv3.Line(
-        currentState.position, 
-        currentState.position.plus(new vv3.Vector(0, forwardMovement, 0))
-    )
-    
-    lineToTransform = lineToTransform.rotateAroundLine(xRotator, currentState.direction.x)
-    lineToTransform = lineToTransform.rotateAroundLine(zRotator, currentState.direction.z)
-    lineToTransform = lineToTransform.rotateAroundLine(yRotator, currentState.direction.y)
-    return lineToTransform.lPrime
 }
 
 exports.Tree = function(
@@ -110,62 +84,73 @@ exports.Tree = function(
         var progression = 0
         var bWidth = this.branchWidth
         var bLength = this.forwardMovement
-        var currentState = new State(new vv3.Vector(0,0,0), new vv3.Vector(0,0,0))
-        var stateToStore = new State(new vv3.Vector(0,0,0), new vv3.Vector(0,0,0))
+        var currentPosition = new Position(0, 0, 0)
+        var currentDirection = new Direction()
         var stateStack = []
-        var newPosition
+        var newPosition = new Position()
         var leafMode = false
+        var extension
         this.instructions.forEach(function(instruction) {
             switch(instruction) {
                 case 'F':
-                    newPosition = rotateAroundAxis(currentState, bLength)
+                    extension = currentDirection.extend(bLength)
+                    newPosition = new Position(
+                        (extension.x + currentPosition.x), 
+                        (extension.y + currentPosition.y),
+                        (extension.z + currentPosition.z))
                     if (leafMode) {
-                        this.leaves.push(new vv3.Line(currentState.position, newPosition))
+                        this.leaves.push({p0: currentPosition.makeObj(), p1: newPosition.makeObj()})
                     } else {
-                        this.branches.push([new vv3.Line(currentState.position, newPosition), bWidth])
+                        this.branches.push({p0: currentPosition.makeObj(), p1: newPosition.makeObj(), w: bWidth})
                     }
-                    currentState.position = newPosition
-                    break    
+                    currentPosition.makeFromClone(newPosition.makeClone())
+                    break
                 case 'f':
-                    newPosition = rotateAroundAxis(currentState, this.forwardMovement*0.1)
+                    var extension =  currentDirection.extend(this.forwardMovement * 0.01)
+
+                    newPosition = new Position(
+                        (extension.x + newPosition.x), 
+                        (extension.y + newPosition.y),
+                        (extension.z + newPosition.z))
+
                     if (leafMode) {
-                        this.leaves.push(new vv3.Line(currentState.position, newPosition))
+                        this.leaves.push({p0: currentPosition.makeObj(), p1: newPosition.makeObj()})
                     } else {
-                        this.branches.push(new vv3.Line(currentState.position, newPosition))
+                        this.branches.push({p0: currentPosition.makeObj(), p1: newPosition.makeObj(), w: bWidth})
                     }
-                    currentState.position = newPosition
-                    break    
+                    currentPosition.makeFromClone(newPosition.makeClone())
+                    break
                 case '+':
-                    currentState.direction.z+=this.angle.z
+                    currentDirection.rotateX(this.angle.x)
                     break
                 case '-':
-                    currentState.direction.z-=this.angle.z
+                    currentDirection.rotateX(-this.angle.x)
                     break
                 case '&':
-                    currentState.direction.x+=this.angle.x
+                    currentDirection.rotateZ(this.angle.z)
                     break    
                 case '^':
-                    currentState.direction.x-=this.angle.x
+                    currentDirection.rotateZ(-this.angle.z)
                     break
                 case '=':
-                    currentState.direction.y+=this.angle.y
+                    currentDirection.rotateY(this.angle.y)
                     break    
                 case '/':
-                    currentState.direction.y-=this.angle.y
+                    currentDirection.rotateY(-this.angle.y)
                     break
                 case '|':
-                    currentState.direction.x+=180
+                    currentDirection.rotateX(180)
                     break
                 case '[':
-                    stateToStore = new State(
-                        new vv3.Vector(currentState.position.x,currentState.position.y,currentState.position.z), 
-                        new vv3.Vector(currentState.direction.x, currentState.direction.y, currentState.direction.z)
-                    )
+                    stateToStore = {"d": currentDirection.makeClone(), "p": currentPosition.makeClone()}
                     stateStack.push(stateToStore)
                     break
                     
                 case ']' :
-                    currentState = stateStack.pop()
+                    var currentState = stateStack.pop()
+                    currentDirection = new Direction(currentState.d.H, currentState.d.L, currentState.d.U)
+                    currentPosition = new Position()
+                    currentPosition.makeFromClone(currentState.p)
                     break
                 case '`':
                     leafMode = (!leafMode)
@@ -185,24 +170,8 @@ exports.Tree = function(
                 
             }
         }, this)
-        this.branches = this.branches.map(x => {
-            return {
-                'p0': 
-                {
-                    'x': x[0].l0.x,
-                    'y': x[0].l0.y,
-                    'z': x[0].l0.z
-                },
-                'p1': 
-                {
-                    'x': x[0].lPrime.x, 
-                    'y': x[0].lPrime.y, 
-                    'z': x[0].lPrime.z
-                },
-                'w': x[1]
-            }
-        })
-        console.log(this.branches)
+        // console.log('Branches: ')
+        // console.log(this.branches)
     }
 
     this.makeTree = function() {

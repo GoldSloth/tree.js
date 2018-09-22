@@ -19,6 +19,7 @@
 |    [i]    |   On the specified iteration  |      2     | The first few iterations |
 |   global  | When other rules do not apply |      3     |       General rules      |
 
+All rules follow the format "Letter" => "Transformed set of letters"
 ## Example JSON request for a tree:
 ```javascript
 {

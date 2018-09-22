@@ -241,6 +241,25 @@
                         0.003,
                         0.0015
                     ],
+                },
+
+                {
+                    angle: {x: 30, y: 90, z: 30},
+                    leafAngle: {x: 22.5, y: 22.5, z: 22.5},
+                    forwardMovement: 15,
+                    leafLength: 0.25,
+                    branchWidth: 6,
+                    iterations: 100,
+                    axiom: ['X'],
+                    stochasticSymbols: {
+                        "a": 0.5,
+                        "b": 0.5
+                    },
+                    rules: {
+                        global: {
+                            'X': '(a{[F&X]}b{[F^X]})'
+                        },
+                    }
                 }
             ]
 
@@ -264,7 +283,8 @@
                     xmlhttp.open("POST", "https://tranquil-sands-18396.herokuapp.com", true)
                 }   
                 xmlhttp.setRequestHeader("Content-Type", "application/json")
-                const treeConfig = presets[2]
+                // 0 is fir, 1 is an acer type thingy, 2 is a different type of tree, and 3 is a test tree.
+                const treeConfig = presets[3]
                 xmlhttp.send(JSON.stringify(treeConfig))
             }
             getBranches()

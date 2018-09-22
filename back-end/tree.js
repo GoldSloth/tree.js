@@ -43,7 +43,8 @@ exports.Tree = function(
         lengths,
         widths,
         leafAngle,
-        leafLength
+        leafLength,
+        stochasticSymbols
     ) {
     this.type = 'Tree'
     this.axiom = axiom
@@ -54,6 +55,7 @@ exports.Tree = function(
     this.branchWidth = branchWidth
     this.lengths = lengths
     this.widths = widths
+    this.stochasticSymbols = stochasticSymbols
     
     this.instructions = ['No instructions set']
     this.branches = []
@@ -82,8 +84,10 @@ exports.Tree = function(
                         stochasticSwitch = true
                     } else if (tree[x] == ")") {
                         stochasticSwitch = false
-
-
+                        var ST = new STParser(stochasticGroup, this.stochasticSymbols)
+                        var returnedChoice = ST.interpretStochastic()
+                        console.log(returnedChoice)
+                        tree2.push(returnedChoice.split(''))
                     } else if (stochasticSwitch) {
                         stochasticGroup.push(tree[x])
                     } else {

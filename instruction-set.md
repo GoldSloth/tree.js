@@ -147,3 +147,7 @@ Broken down, that interprets as:
 
 To ensure that a stochastic group is definitely chosen, chosen symbols must add up to 1.
 If this is not the case, a choice may not actually be picked.
+
+#### A note on design of an L system:
+
+A stochastic iteration will take a full iteration to progress, therefore having a buffer stage for other things is probably adviseable.

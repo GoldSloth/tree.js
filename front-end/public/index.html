@@ -247,19 +247,48 @@
                     angle: {x: 30, y: 90, z: 30},
                     leafAngle: {x: 22.5, y: 22.5, z: 22.5},
                     forwardMovement: 15,
-                    leafLength: 0.25,
-                    branchWidth: 6,
-                    iterations: 100,
-                    axiom: ['X'],
+                    leafLength: 0.1,
+                    branchWidth: 2,
+                    iterations: 11,
+                    axiom: ['Z'],
                     stochasticSymbols: {
                         "a": 0.5,
                         "b": 0.5
                     },
                     rules: {
                         global: {
-                            'X': '(a{[F&X]}b{[F^X]})'
+                            'Z': 'FFFY',
+                            'Y': "<[+FX]=[+FX]=[+FX]=[+FX]>",
+                            'X': "(a{[F^Y]}b{[F&Y]})"
                         },
-                    }
+                        final: {
+                            'Y': "-[/`[-f+f+f-|-f+f+f]`]++[/`[-f+f+f-|-f+f+f]`]^^--[/`[-f+f+f-|-f+f+f]`]++[/`[-f+f+f-|-f+f+f]`]"
+                        }
+                    },
+                    lengths: [
+                        1.0,
+                        0.8,
+                        0.6,
+                        0.4,
+                        0.2,
+                        0.1,
+                        0.05,
+                        0.025,
+                        0.0125,
+                        0.006
+                    ],
+                    widths: [
+                        1.0,
+                        0.8,
+                        0.4,
+                        0.2,
+                        0.1,
+                        0.06,
+                        0.03,
+                        0.015,
+                        0.006,
+                        0.003
+                    ]
                 }
             ]
 

@@ -142,9 +142,9 @@ exports.Tree = function(
                     var extension =  currentDirection.extend(this.forwardMovement * this.leafLength)
 
                     newPosition = new Position(
-                        (extension.x + newPosition.x), 
-                        (extension.y + newPosition.y),
-                        (extension.z + newPosition.z))
+                        (extension.x + currentPosition.x), 
+                        (extension.y + currentPosition.y),
+                        (extension.z + currentPosition.z))
 
                     if (leafMode) {
                         this.leaves.push({p0: currentPosition.makeObj(), p1: newPosition.makeObj()})

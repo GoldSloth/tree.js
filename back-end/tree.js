@@ -41,12 +41,14 @@ exports.Tree = function(
         branchWidth,
         lengths,
         widths,
+        leafAngle,
+        leafLength
     ) {
     this.type = 'Tree'
     this.axiom = axiom
     this.rules = rules
     this.iterations = iterations
-    this.angle = angle
+    this.branchAngle = angle
     this.forwardMovement = forwardMovement
     this.branchWidth = branchWidth
     this.lengths = lengths
@@ -55,7 +57,8 @@ exports.Tree = function(
     this.instructions = ['No instructions set']
     this.branches = []
     this.leaves = []
-
+    this.leafAngle = leafAngle
+    this.leafLength = leafLength
     this.makeInstructions = function() {
         var tree = this.axiom
         this.iteration = 0
@@ -89,8 +92,17 @@ exports.Tree = function(
         var stateStack = []
         var newPosition = new Position()
         var leafMode = false
-        var extension
+        this.angle = {}
         this.instructions.forEach(function(instruction) {
+            if (leafMode) {
+                this.angle.x = leafAngle.x
+                this.angle.y = leafAngle.y
+                this.angle.z = leafAngle.z
+            } else {
+                this.angle.x = this.branchAngle.x
+                this.angle.y = this.branchAngle.y
+                this.angle.z = this.branchAngle.z
+            }
             switch(instruction) {
                 case 'F':
                     extension = currentDirection.extend(bLength)
@@ -106,7 +118,7 @@ exports.Tree = function(
                     currentPosition.makeFromClone(newPosition.makeClone())
                     break
                 case 'f':
-                    var extension =  currentDirection.extend(this.forwardMovement * 0.01)
+                    var extension =  currentDirection.extend(this.forwardMovement * this.leafLength)
 
                     newPosition = new Position(
                         (extension.x + newPosition.x), 
@@ -177,7 +189,7 @@ exports.Tree = function(
     this.makeTree = function() {
         this.makeInstructions()
         this.makeBranches()
-        logWrite('Tree Instructions: ' + this.instructions + '\n' + 'Branches: ' + this.branches, 'tree-log.log')
+        logWrite(('Tree Instructions: ' + JSON.stringify(this.instructions) + '\n' + 'Branches: ' + JSON.stringify(this.branches)), 'tree-log.log')
         return {branches: this.branches, leaves: this.leaves}
     }
 }

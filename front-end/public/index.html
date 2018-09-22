@@ -11,6 +11,7 @@
 	<body>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/95/three.min.js"></script>
         <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
         <script>
 
             var scene = new THREE.Scene();
@@ -50,7 +51,8 @@
 
             function drawBranchesWhenReady() {
                 var nodes = [{'position': new THREE.Vector3(0,0,0), 'size': 1}]
-                var randomRange = new THREE.Vector3(0.5, 0.5, 0.5)
+
+                var randomRange = new THREE.Vector3(0.0, 0.0, 0.0)
                 var material = new THREE.MeshLambertMaterial( { color: 0x662211 } );
                 branches.forEach(function(line) {
                     var l0 = new THREE.Vector3(line.p0.x, line.p0.y, line.p0.z)
@@ -118,6 +120,7 @@
 
 
             var presets = [
+                // Nice tree
                 {
                     angle: {x: 22.5, y: 22.5, z: 22.5},
                     forwardMovement: 15,
@@ -152,6 +155,7 @@
                     }
                 },
 
+                // Christmas tree type thingo
                 {
                     angle: {x: 45, y: 45, z: 45},
                     forwardMovement: 15,
@@ -197,18 +201,46 @@
                         }
                     }
                 },
-
+                
                 {
-                    angle: {x: 45, y: 45, z: 45},
+                    angle: {x: 30, y: 90, z: 30},
+                    leafAngle: {x: 22.5, y: 22.5, z: 22.5},
                     forwardMovement: 15,
-                    branchWidth: 1,
-                    iterations: 2,
-                    axiom: ['A'],
+                    leafLength: 0.25,
+                    branchWidth: 6,
+                    iterations: 4,
+                    axiom: ['X'],
                     rules: {
                         global: {
-                            'A': 'F[+F][-F]'
+                            'X': '[F[=+<X>][=-<X>]]=[F[=+<X>][=-<X>]]F<X>',
+                            'F': 'FF'
+                        },
+                        final: {
+                            'X': '[/`[-f+f+f-|-f+f+f]`]'
                         }
-                    }
+                    },
+                    lengths: [
+                        1,
+                        0.9,
+                        0.8,
+                        0.7,
+                        0.6,
+                        0.5,
+                        0.4,
+                        0.3
+                    ],
+                    widths: [
+                        1,
+                        0.4,
+                        0.2,
+                        0.1,
+                        0.05,
+                        0.025,
+                        0.0125,
+                        0.006,
+                        0.003,
+                        0.0015
+                    ],
                 }
             ]
 
@@ -223,14 +255,16 @@
                         drawBranchesWhenReady()
                     }
                 }
-                var dev = false
+
+                const dev = true
+
                 if (dev) {
                     xmlhttp.open("POST", "http://localhost:3001", true)
                 } else {
                     xmlhttp.open("POST", "https://tranquil-sands-18396.herokuapp.com", true)
                 }   
                 xmlhttp.setRequestHeader("Content-Type", "application/json")
-                const treeConfig = presets[1]
+                const treeConfig = presets[2]
                 xmlhttp.send(JSON.stringify(treeConfig))
             }
             getBranches()

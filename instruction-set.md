@@ -1,58 +1,69 @@
 ## Instructions
 #### The tree config sent as a JSON request to the back-end needs to contain the following properties:
-* angle - the degrees of rotation around an axis
-* forwardMovement - the length of each branch segment
-* iterations - the number of times the algorithm with run (complexity)
-* axiom - the starting string for the algorithm, must contain letters in the alphabet
-* rules - an instruction set for each iteration of the algorithm, must contain mappings only containing letters in the alphabet
-*
+* angle - The angle to rotate around the specified axis
+* leafAngle - See above, but for leaves
+* forwardMovement - The base length of a branch section
+* leafLength - See above, but for leaves
+* branchWidth - Base values for branch width
+* iterations - How many times will the replacement algorithm run
+* axiom - The starting string for the algorithm
 
+* lengths - An array defining a multiplier for the branch length for each progression along a tree
+* widths - An array defining a multiplier for the branch width for each progression along a tree
+
+* rules - See table below:
+
+| Rule Type |         Executed When         | Precedence |       Typical Usage      |
+|:---------:|:-----------------------------:|:----------:|:------------------------:|
+|   final   |     On the final iteration    |      1     |          Leaves          |
+|    [i]    |   On the specified iteration  |      2     | The first few iterations |
+|   global  | When other rules do not apply |      3     |       General rules      |
+
+All rules follow the format "Letter" => "Transformed set of letters"
 ## Example JSON request for a tree:
 ```javascript
 {
-	angle: {x: 22.5, y: 22.5, z: 22.5},
+	angle: {x: 30, y: 90, z: 30},
+	leafAngle: {x: 22.5, y: 22.5, z: 22.5},
 	forwardMovement: 15,
-	branchWidth: 2,
-	iterations: 7,
-	axiom: ['A'],
-	useLengthAsWidth: false,
+	leafLength: 0.25,
+	branchWidth: 6,
+	iterations: 4,
+	axiom: ['X'],
+	rules: {
+		global: {
+			'X': '[F[=+<X>][=-<X>]]=[F[=+<X>][=-<X>]]F<X>',
+			'F': 'FF'
+		},
+		1: {
+			'F': "FXF"
+		}
+		final: {
+			'X': '[/`[-f+f+f-|-f+f+f]`]'
+		}
+	},
 	lengths: [
 		1,
+		0.9,
 		0.8,
+		0.7,
 		0.6,
-		0.4
+		0.5,
+		0.4,
+		0.3
 	],
 	widths: [
 		1,
-		0.5,
+		0.4,
+		0.2,
 		0.1,
-		0.05
+		0.05,
+		0.025,
+		0.0125,
+		0.006,
+		0.003,
+		0.0015
 	],
-	rules: {
-		global: {
-		},
-		0: {
-			'A': '1FA'
-		},
-		1: {
-			'A': '1FA'
-		},
-		2: {
-			'A': '[2&FLA]/////[2&FLA]///////[2&FLA]'
-		},
-		3: {
-			'A': '[2&FLA]/////[2&FAFLA]///////[2&FLA]'
-		},
-		4: {
-			'A': '[&3FA]/////[&3FAFA]///////[&3FA]'
-		},
-		5: {
-			'A': '[&[4F^L===&3L]]/////[&[4FL===L]]///////[&[4FL===L]]'
-		},
-		final: {
-			'L': '[/`[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]/[-f+f+f-|-f+f+f]]`'
-		}
-	}
 }
 ```
 

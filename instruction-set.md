@@ -144,3 +144,6 @@ Broken down, that interprets as:
 * If  0.2 < rnd < (0.2 + 0.8), do [F-F]
 
 * Close stochastic group
+
+To ensure that a stochastic group is definitely chosen, chosen symbols must add up to 1.
+If this is not the case, a choice may not actually be picked.

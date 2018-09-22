@@ -102,7 +102,7 @@ Final rules will have higher precedence than anything else.
 * ` - leaf declaration (Vertices will be sent in the leaf section of the output, as opposed to the default branches)
 
 * < - Forward progression in tree (Length shorter, Width narrower)
-* > - Backwards progression in tree (Length longer, Width wider)
+* \> - Backwards progression in tree (Length longer, Width wider)
 
 #### Important: You must have as many progressions defined as iterations, Otherwise weird things happen
 

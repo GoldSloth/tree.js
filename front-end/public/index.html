@@ -15,7 +15,7 @@
         <script>
 
             var scene = new THREE.Scene();
-            var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 100000 );
+            var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 400 );
 
             var renderer = new THREE.WebGLRenderer();
             renderer.setSize( window.innerWidth, window.innerHeight );
@@ -26,19 +26,14 @@
 
             var controls = new THREE.OrbitControls( camera );
 
-            camera.position.set(0, 500, 100);
+            camera.position.set(0, 150, 200);
             controls.update();
-            var ambLight = new THREE.AmbientLight(0xffffff, 0.5)
-            var light = new THREE.DirectionalLight(0xffffff, 0.5);
+            var ambLight = new THREE.AmbientLight(0xffffff, 0.4)
+            var light = new THREE.DirectionalLight(0xffffff, 0.7);
             light.position = controls.object.position.clone()
             scene.add(ambLight)
             scene.add(light);
             
-            var geom = new THREE.BoxBufferGeometry(1, 1, 1);
-            var mat = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-            var cube = new THREE.Mesh( geom, mat );
-            scene.add( cube );
-        
             var lineTreeGroup = new THREE.Group()
             function nextFrame() {
                 requestAnimationFrame(nextFrame);
@@ -52,7 +47,6 @@
             function drawBranchesWhenReady() {
                 var nodes = [{'position': new THREE.Vector3(0,0,0), 'size': 1}]
 
-                var randomRange = new THREE.Vector3(0.0, 0.0, 0.0)
                 var material = new THREE.MeshLambertMaterial( { color: 0x662211 } );
                 branches.forEach(function(line) {
                     var l0 = new THREE.Vector3(line.p0.x, line.p0.y, line.p0.z)
@@ -74,10 +68,6 @@
                             l1
                         ).divideScalar(
                             2
-                        ).add(new THREE.Vector3(
-                            Math.random()*randomRange.x,
-                            Math.random()*randomRange.y,
-                            Math.random()*randomRange.z)
                         )
                     var branchCurve = new THREE.QuadraticBezierCurve3(
                         l0,
@@ -85,7 +75,7 @@
                         l1
                     )
                     
-                    var tubeGeom = new THREE.TubeGeometry(branchCurve, 20, line.w, 8, true)
+                    var tubeGeom = new THREE.TubeGeometry(branchCurve, 16, line.w, 10, true)
                     
                     var singleTube = new THREE.Mesh(tubeGeom, material)
                     lineTreeGroup.add(singleTube)
@@ -241,6 +231,54 @@
                         0.003,
                         0.0015
                     ],
+                },
+
+                {
+                    angle: {x: 30, y: 90, z: 30},
+                    leafAngle: {x: 22.5, y: 22.5, z: 22.5},
+                    forwardMovement: 15,
+                    leafLength: 0.1,
+                    branchWidth: 2,
+                    iterations: 11,
+                    axiom: ['Z'],
+                    stochasticSymbols: {
+                        "a": 0.5,
+                        "b": 0.5
+                    },
+                    rules: {
+                        global: {
+                            'Z': 'FFFY',
+                            'Y': "<[+FX]=[+FX]=[+FX]=[+FX]>",
+                            'X': "(a{[F^Y]}b{[F&Y]})"
+                        },
+                        final: {
+                            'Y': "-[/`[-f+f+f-|-f+f+f]`]++[/`[-f+f+f-|-f+f+f]`]^^--[/`[-f+f+f-|-f+f+f]`]++[/`[-f+f+f-|-f+f+f]`]"
+                        }
+                    },
+                    lengths: [
+                        1.0,
+                        0.8,
+                        0.6,
+                        0.4,
+                        0.2,
+                        0.1,
+                        0.05,
+                        0.025,
+                        0.0125,
+                        0.006
+                    ],
+                    widths: [
+                        1.0,
+                        0.8,
+                        0.4,
+                        0.2,
+                        0.1,
+                        0.06,
+                        0.03,
+                        0.015,
+                        0.006,
+                        0.003
+                    ]
                 }
             ]
 
@@ -264,7 +302,8 @@
                     xmlhttp.open("POST", "https://tranquil-sands-18396.herokuapp.com", true)
                 }   
                 xmlhttp.setRequestHeader("Content-Type", "application/json")
-                const treeConfig = presets[2]
+                // 0 is fir, 1 is an acer type thingy, 2 is a different type of tree, and 3 is a test tree.
+                const treeConfig = presets[3]
                 xmlhttp.send(JSON.stringify(treeConfig))
             }
             getBranches()

@@ -1,6 +1,7 @@
 const math = require('mathjs')
 const { Position, Direction } = require('./state.js')
 const fs = require('fs')
+const { STParser } = require('./stochastic-parser.js')
 
 function logWrite(message, filename) {
     fs.writeFile(filename, message, function(err) {
@@ -42,7 +43,8 @@ exports.Tree = function(
         lengths,
         widths,
         leafAngle,
-        leafLength
+        leafLength,
+        stochasticSymbols
     ) {
     this.type = 'Tree'
     this.axiom = axiom
@@ -53,25 +55,44 @@ exports.Tree = function(
     this.branchWidth = branchWidth
     this.lengths = lengths
     this.widths = widths
+    this.stochasticSymbols = stochasticSymbols
     
     this.instructions = ['No instructions set']
     this.branches = []
     this.leaves = []
     this.leafAngle = leafAngle
     this.leafLength = leafLength
+
+
     this.makeInstructions = function() {
         var tree = this.axiom
         this.iteration = 0
         this.finalIteration = false
         for (i=0;i<this.iterations;i++) {
-            if(i>this.iterations-2){
+            if(i > this.iterations - 2){
                 this.finalIteration = true
             }
             this.iteration = i
             var tree2 = []
+
+            var stochasticSwitch = false
+            var stochasticGroup = []
+
             for (var x=0; x<tree.length;x++) {
                 try {
-                    tree2.push(applyRules(tree[x], this.rules, this.iteration, this.finalIteration).split(''))
+                    if (tree[x] == "(") {
+                        stochasticSwitch = true
+                    } else if (tree[x] == ")") {
+                        stochasticSwitch = false
+                        var ST = new STParser(stochasticGroup, this.stochasticSymbols)
+                        var returnedChoice = ST.interpretStochastic()
+                        console.log(returnedChoice)
+                        tree2.push(returnedChoice.split(''))
+                    } else if (stochasticSwitch) {
+                        stochasticGroup.push(tree[x])
+                    } else {
+                        tree2.push(applyRules(tree[x], this.rules, this.iteration, this.finalIteration).split(''))
+                    }
             
                 } catch(err) {
                     console.log(err)
@@ -121,9 +142,9 @@ exports.Tree = function(
                     var extension =  currentDirection.extend(this.forwardMovement * this.leafLength)
 
                     newPosition = new Position(
-                        (extension.x + newPosition.x), 
-                        (extension.y + newPosition.y),
-                        (extension.z + newPosition.z))
+                        (extension.x + currentPosition.x), 
+                        (extension.y + currentPosition.y),
+                        (extension.z + currentPosition.z))
 
                     if (leafMode) {
                         this.leaves.push({p0: currentPosition.makeObj(), p1: newPosition.makeObj()})

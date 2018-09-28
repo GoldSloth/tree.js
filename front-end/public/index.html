@@ -48,6 +48,7 @@
                 var nodes = [{'position': new THREE.Vector3(0,0,0), 'size': 1}]
 
                 var material = new THREE.MeshLambertMaterial( { color: 0x662211, side: THREE.DoubleSide, flatShading: false } );
+
                 branches.forEach(function(line) {
                     var l0 = new THREE.Vector3(line.p0.x, line.p0.y, line.p0.z)
                     var l1 = new THREE.Vector3(line.p1.x, line.p1.y, line.p1.z)

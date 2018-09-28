@@ -28,7 +28,8 @@ const server = http.createServer(function(request, response) {
         treeConfig.lengths,
         treeConfig.widths,
         treeConfig.leafAngle,
-        treeConfig.leafLength)
+        treeConfig.leafLength,
+        treeConfig.stochasticSymbols)
       response.end(JSON.stringify(requestedBranches.makeTree()))
     })
   } else {

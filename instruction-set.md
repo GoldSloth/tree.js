@@ -20,6 +20,9 @@
 |   global  | When other rules do not apply |      3     |       General rules      |
 
 All rules follow the format "Letter" => "Transformed set of letters"
+
+* stochasticSymbols - An object featuring used symbols, and their stochastic meaning.
+
 ## Example JSON request for a tree:
 ```javascript
 {
@@ -79,6 +82,12 @@ Final rules will have higher precedence than anything else.
 * [ - open branch
 * ] - close branch
 
+* ( - open stochastic group
+* ) - close stochastic group
+
+* { - open stochastic branch
+* } - close stochastic branch
+
 (Fitting with the paper: [Algorthmic Botany](http://algorithmicbotany.org/papers/abop/abop.pdf))
 
 * \+ - rotate positively around the z-axis
@@ -93,7 +102,7 @@ Final rules will have higher precedence than anything else.
 * ` - leaf declaration (Vertices will be sent in the leaf section of the output, as opposed to the default branches)
 
 * < - Forward progression in tree (Length shorter, Width narrower)
-* > - Backwards progression in tree (Length longer, Width wider)
+* \> - Backwards progression in tree (Length longer, Width wider)
 
 #### Important: You must have as many progressions defined as iterations, Otherwise weird things happen
 
@@ -105,3 +114,40 @@ Final rules will have higher precedence than anything else.
 | 3           | 5%    | 20%    |
 
 (These are fairly standard values, others can be provided in the argument list)
+
+
+#### Stochastic Rules:
+
+A stochastic group can be defined between normal brackets ``()``, indicating that a "choice" needs to be made.
+
+A stochastic branch should be defined inside a stochastic group using curly brackets ``{}``, declaring the different "choices" that can be made.
+
+Pre-defined stochastic symbols should be used to indicate the relative frequency of an event.
+
+For instance, if the following symbols were defined:
+
+| Symbol | Value |
+|--------|-------|
+| a      | 0.2   |
+| b      | 0.5   |
+| c      | 0.8   |
+
+This statement could be made:
+
+``(a{[F+F]}c{[F-F]})``
+
+Broken down, that interprets as:
+
+* Open new stochastic group
+
+* If rnd < 0.2, do [F+F]
+* If  0.2 < rnd < (0.2 + 0.8), do [F-F]
+
+* Close stochastic group
+
+To ensure that a stochastic group is definitely chosen, chosen symbols must add up to 1.
+If this is not the case, a choice may not actually be picked.
+
+#### A note on design of an L system:
+
+A stochastic iteration will take a full iteration to progress, therefore having a buffer stage for other things is probably adviseable.

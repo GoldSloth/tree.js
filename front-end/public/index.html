@@ -11,7 +11,7 @@
 	<body>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/95/three.min.js"></script>
         <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
-        <script src="https://cdn.rawgit.com/GolddolphinSKB-Fexcraftian/cylinders.js/764be83c/Library/Cylinder.js"></script>
+        <script src="https://cdn.rawgit.com/GolddolphinSKB-Fexcraftian/cylinders.js/a86e508d/Library/Cylinder.js"></script>
         <script>
 
             var scene = new THREE.Scene();
@@ -49,25 +49,52 @@
 
                 var material = new THREE.MeshLambertMaterial( { color: 0x662211, side: THREE.DoubleSide, flatShading: false } );
 
-                branches.forEach(function(line) {
+                for (var x=0; x<branches.length; x++) {
+                    var line = branches[x]
                     var l0 = new THREE.Vector3(line.p0.x, line.p0.y, line.p0.z)
                     var l1 = new THREE.Vector3(line.p1.x, line.p1.y, line.p1.z)
                     for (let i=0; i<nodes.length;i++) {
                         var node = nodes[i]
-                        if (!(node.position.x == l0.x && node.position.y == l0.y && node.position.z == l0.z)) {
+                        var isSame = (node.position.x == l0.x && node.position.y == l0.y && node.position.z == l0.z)
+                        if (!isSame) {
                             var nodePosition = new THREE.Vector3(l0.x, l0.y, l0.z)
                             nodes.push({'position': nodePosition, 'size': line.w})
+                            break
+                            
+                        } else if (line.w < nodes[i].size){
+                            nodes[i].size == line.w
+                            break
+                        }
+                    }
+                    
+                }
+
+                for (var x=0; x<branches.length; x++) {
+                    var line = branches[x]
+
+                    var l0 = new THREE.Vector3(line.p0.x, line.p0.y, line.p0.z)
+                    var l1 = new THREE.Vector3(line.p1.x, line.p1.y, line.p1.z)
+
+                    var rad2 = 0
+                    for (var i=0; i<nodes.length; i++) {
+                        var node = nodes[i]
+                        var isSame = (node.position.x == l1.x && node.position.y == l1.y && node.position.z == l1.z)
+                        if (isSame) {
+                            rad2 = node.size
+                            
                             break
                         }
                     }
 
-                    var cyl = new Cylinder(l0, l1, line.w, line.w, 10, true)
+                    if (rad2 == 0) {
+                        rad2 = line.w
+                        
+                    }
+                    var cyl = new Cylinder(l0, l1, line.w, rad2, 10, true)
                     var cylObj = cyl.makeCylinder(material, false)
                     scene.add(cylObj.Mesh)
+                }
 
-
-                    
-                })
                 console.log('Drawn branches')
                 nodes.forEach(function(node) {
                     var nodesGeometry = new THREE.SphereGeometry(node.size, 16, 16)
@@ -225,7 +252,7 @@
                     leafAngle: {x: 22.5, y: 22.5, z: 22.5},
                     forwardMovement: 15,
                     leafLength: 0.1,
-                    branchWidth: 2,
+                    branchWidth: 3.5,
                     iterations: 11,
                     axiom: ['Z'],
                     stochasticSymbols: {
@@ -255,16 +282,41 @@
                         0.006
                     ],
                     widths: [
-                        1.0,
-                        0.8,
-                        0.4,
-                        0.2,
+                        1.5,
+                        0.6,
+                        0.3,
                         0.1,
-                        0.06,
-                        0.03,
-                        0.015,
+                        0.05,
+                        0.025,
+                        0.0125,
                         0.006,
-                        0.003
+                        0.003,
+                        0.0015
+                    ]
+                },
+
+                {
+                    angle: {x: 30, y: 90, z: 30},
+                    leafAngle: {x: 22.5, y: 22.5, z: 22.5},
+                    forwardMovement: 15,
+                    leafLength: 0.1,
+                    branchWidth: 20,
+                    iterations: 2,
+                    axiom: ['A'],
+                    rules: {
+                        global: {
+                            'A': "<FA>" 
+                        }
+                    },
+                    lengths: [
+                        1.0,
+                        1.0,
+                        1.0,
+                    ],
+                    widths: [
+                        1.0,
+                        0.5,
+                        0.25
                     ]
                 }
             ]

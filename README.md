@@ -10,7 +10,7 @@ A library for creating 3d models of trees and foliage from an L system *"procedu
 
 ## Planned features:
 - Filling of leaves
-- An 
+- Example implementation, and use in terrain
 
 ## Examples:
 ![Fancy Trees](https://preview.ibb.co/bUjZ1e/e_JUMFT0_Rd_8qf_IGZtwx_8g_QZQGUqvl_E0_SIOa7d6g_Rll_LUhjq_Qfv_Vj9y_R5vhy_DKr_KH0_Vu0_PI7_S2_9_FEENc_Rp_Zn_X6ec_OBYjhr_OK8ku.png)

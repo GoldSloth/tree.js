@@ -11,10 +11,11 @@
 	<body>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/95/three.min.js"></script>
         <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+        <script src="https://cdn.rawgit.com/GolddolphinSKB-Fexcraftian/cylinders.js/a86e508d/Library/Cylinder.js"></script>
         <script>
 
             var scene = new THREE.Scene();
-            var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 100000 );
+            var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 400 );
 
             var renderer = new THREE.WebGLRenderer();
             renderer.setSize( window.innerWidth, window.innerHeight );
@@ -25,19 +26,14 @@
 
             var controls = new THREE.OrbitControls( camera );
 
-            camera.position.set(0, 500, 100);
+            camera.position.set(0, 150, 200);
             controls.update();
-            var ambLight = new THREE.AmbientLight(0xffffff, 0.5)
-            var light = new THREE.DirectionalLight(0xffffff, 0.5);
+            var ambLight = new THREE.AmbientLight(0xffffff, 0.4)
+            var light = new THREE.DirectionalLight(0xffffff, 0.7);
             light.position = controls.object.position.clone()
             scene.add(ambLight)
             scene.add(light);
             
-            var geom = new THREE.BoxBufferGeometry(1, 1, 1);
-            var mat = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-            var cube = new THREE.Mesh( geom, mat );
-            scene.add( cube );
-        
             var lineTreeGroup = new THREE.Group()
             function nextFrame() {
                 requestAnimationFrame(nextFrame);
@@ -50,45 +46,55 @@
 
             function drawBranchesWhenReady() {
                 var nodes = [{'position': new THREE.Vector3(0,0,0), 'size': 1}]
-                var randomRange = new THREE.Vector3(0.5, 0.5, 0.5)
-                var material = new THREE.MeshLambertMaterial( { color: 0x662211 } );
-                branches.forEach(function(line) {
+
+                var material = new THREE.MeshLambertMaterial( { color: 0x662211, side: THREE.DoubleSide, flatShading: false } );
+
+                for (var x=0; x<branches.length; x++) {
+                    var line = branches[x]
                     var l0 = new THREE.Vector3(line.p0.x, line.p0.y, line.p0.z)
                     var l1 = new THREE.Vector3(line.p1.x, line.p1.y, line.p1.z)
                     for (let i=0; i<nodes.length;i++) {
                         var node = nodes[i]
-                        if (!(node.position.x == l0.x && node.position.y == l0.y && node.position.z == l0.z)) {
+                        var isSame = (node.position.x == l0.x && node.position.y == l0.y && node.position.z == l0.z)
+                        if (!isSame) {
                             var nodePosition = new THREE.Vector3(l0.x, l0.y, l0.z)
                             nodes.push({'position': nodePosition, 'size': line.w})
                             break
+                            
+                        } else if (line.w < nodes[i].size){
+                            nodes[i].size == line.w
+                            break
                         }
                     }
-                    var meanVector = (
-                        new THREE.Vector3(
-                            0,0,0
-                        )).add(
-                            l0
-                        ).add(
-                            l1
-                        ).divideScalar(
-                            2
-                        ).add(new THREE.Vector3(
-                            Math.random()*randomRange.x,
-                            Math.random()*randomRange.y,
-                            Math.random()*randomRange.z)
-                        )
-                    var branchCurve = new THREE.QuadraticBezierCurve3(
-                        l0,
-                        meanVector,
-                        l1
-                    )
                     
-                    var tubeGeom = new THREE.TubeGeometry(branchCurve, 20, line.w, 8, true)
-                    
-                    var singleTube = new THREE.Mesh(tubeGeom, material)
-                    lineTreeGroup.add(singleTube)
-                    
-                })
+                }
+
+                for (var x=0; x<branches.length; x++) {
+                    var line = branches[x]
+
+                    var l0 = new THREE.Vector3(line.p0.x, line.p0.y, line.p0.z)
+                    var l1 = new THREE.Vector3(line.p1.x, line.p1.y, line.p1.z)
+
+                    var rad2 = 0
+                    for (var i=0; i<nodes.length; i++) {
+                        var node = nodes[i]
+                        var isSame = (node.position.x == l1.x && node.position.y == l1.y && node.position.z == l1.z)
+                        if (isSame) {
+                            rad2 = node.size
+                            
+                            break
+                        }
+                    }
+
+                    if (rad2 == 0) {
+                        rad2 = line.w
+                        
+                    }
+                    var cyl = new Cylinder(l0, l1, line.w, rad2, 10, true)
+                    var cylObj = cyl.makeCylinder(material, false)
+                    scene.add(cylObj.Mesh)
+                }
+
                 console.log('Drawn branches')
                 nodes.forEach(function(node) {
                     var nodesGeometry = new THREE.SphereGeometry(node.size, 16, 16)
@@ -118,6 +124,7 @@
 
 
             var presets = [
+                // Nice tree
                 {
                     angle: {x: 22.5, y: 22.5, z: 22.5},
                     forwardMovement: 15,
@@ -152,6 +159,7 @@
                     }
                 },
 
+                // Christmas tree type thingo
                 {
                     angle: {x: 45, y: 45, z: 45},
                     forwardMovement: 15,
@@ -197,18 +205,119 @@
                         }
                     }
                 },
+                
+                {
+                    angle: {x: 30, y: 90, z: 30},
+                    leafAngle: {x: 22.5, y: 22.5, z: 22.5},
+                    forwardMovement: 15,
+                    leafLength: 0.25,
+                    branchWidth: 6,
+                    iterations: 4,
+                    axiom: ['X'],
+                    rules: {
+                        global: {
+                            'X': '[F[=+<X>][=-<X>]]=[F[=+<X>][=-<X>]]F<X>',
+                            'F': 'FF'
+                        },
+                        final: {
+                            'X': '[/`[-f+f+f-|-f+f+f]`]'
+                        }
+                    },
+                    lengths: [
+                        1,
+                        0.9,
+                        0.8,
+                        0.7,
+                        0.6,
+                        0.5,
+                        0.4,
+                        0.3
+                    ],
+                    widths: [
+                        1,
+                        0.4,
+                        0.2,
+                        0.1,
+                        0.05,
+                        0.025,
+                        0.0125,
+                        0.006,
+                        0.003,
+                        0.0015
+                    ],
+                },
 
                 {
-                    angle: {x: 45, y: 45, z: 45},
+                    angle: {x: 30, y: 90, z: 30},
+                    leafAngle: {x: 22.5, y: 22.5, z: 22.5},
                     forwardMovement: 15,
-                    branchWidth: 1,
+                    leafLength: 0.1,
+                    branchWidth: 3.5,
+                    iterations: 11,
+                    axiom: ['Z'],
+                    stochasticSymbols: {
+                        "a": 0.5,
+                        "b": 0.5
+                    },
+                    rules: {
+                        global: {
+                            'Z': 'FFFY',
+                            'Y': "<[+FX]=[+FX]=[+FX]=[+FX]>",
+                            'X': "(a{[F^Y]}b{[F&Y]})"
+                        },
+                        final: {
+                            'Y': "-[/`[-f+f+f-|-f+f+f]`]++[/`[-f+f+f-|-f+f+f]`]^^--[/`[-f+f+f-|-f+f+f]`]++[/`[-f+f+f-|-f+f+f]`]"
+                        }
+                    },
+                    lengths: [
+                        1.0,
+                        0.8,
+                        0.6,
+                        0.4,
+                        0.2,
+                        0.1,
+                        0.05,
+                        0.025,
+                        0.0125,
+                        0.006
+                    ],
+                    widths: [
+                        1.5,
+                        0.6,
+                        0.3,
+                        0.1,
+                        0.05,
+                        0.025,
+                        0.0125,
+                        0.006,
+                        0.003,
+                        0.0015
+                    ]
+                },
+
+                {
+                    angle: {x: 30, y: 90, z: 30},
+                    leafAngle: {x: 22.5, y: 22.5, z: 22.5},
+                    forwardMovement: 15,
+                    leafLength: 0.1,
+                    branchWidth: 20,
                     iterations: 2,
                     axiom: ['A'],
                     rules: {
                         global: {
-                            'A': 'F[+F][-F]'
+                            'A': "<FA>" 
                         }
-                    }
+                    },
+                    lengths: [
+                        1.0,
+                        1.0,
+                        1.0,
+                    ],
+                    widths: [
+                        1.0,
+                        0.5,
+                        0.25
+                    ]
                 }
             ]
 
@@ -223,14 +332,17 @@
                         drawBranchesWhenReady()
                     }
                 }
-                var dev = false
+
+                const dev = true
+
                 if (dev) {
                     xmlhttp.open("POST", "http://localhost:3001", true)
                 } else {
                     xmlhttp.open("POST", "https://tranquil-sands-18396.herokuapp.com", true)
                 }   
                 xmlhttp.setRequestHeader("Content-Type", "application/json")
-                const treeConfig = presets[1]
+                // 0 is fir, 1 is an acer type thingy, 2 is a different type of tree, and 3 is a test tree.
+                const treeConfig = presets[3]
                 xmlhttp.send(JSON.stringify(treeConfig))
             }
             getBranches()

@@ -7,8 +7,8 @@ const server = http.createServer(function(request, response) {
   response.statusCode = 200;
   response.setHeader('Content-Type', 'application/json')
   response.setHeader('Access-Control-Allow-Origin', '*')
-  response.setHeader('Access-Control-Allow-Methods',"POST")
-  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Origin')
+  response.setHeader('Access-Control-Allow-Methods',"POST, OPTIONS")
+  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Origin, Access-Control-Allow-Credentials, Access-Control-Allow-Headers, Access-Control-Allow-Methods')
   response.setHeader('Access-Control-Max-Age', '86400')
 
   if (request.method === 'POST') {

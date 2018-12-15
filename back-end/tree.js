@@ -68,6 +68,7 @@ exports.Tree = function(
         var tree = this.axiom
         this.iteration = 0
         this.finalIteration = false
+
         for (i=0;i<this.iterations;i++) {
             if(i > this.iterations - 2){
                 this.finalIteration = true
@@ -114,6 +115,7 @@ exports.Tree = function(
         var newPosition = new Position()
         var leafMode = false
         this.angle = {}
+        this.subleaf = []
         this.instructions.forEach(function(instruction) {
             if (leafMode) {
                 this.angle.x = leafAngle.x
@@ -132,7 +134,7 @@ exports.Tree = function(
                         (extension.y + currentPosition.y),
                         (extension.z + currentPosition.z))
                     if (leafMode) {
-                        this.leaves.push({p0: currentPosition.makeObj(), p1: newPosition.makeObj()})
+                        this.subleaf.push({p0: currentPosition.makeObj(), p1: newPosition.makeObj()})
                     } else {
                         this.branches.push({p0: currentPosition.makeObj(), p1: newPosition.makeObj(), w: bWidth})
                     }
@@ -147,7 +149,7 @@ exports.Tree = function(
                         (extension.z + currentPosition.z))
 
                     if (leafMode) {
-                        this.leaves.push({p0: currentPosition.makeObj(), p1: newPosition.makeObj()})
+                        this.subleaf.push(newPosition.makeObj())
                     } else {
                         this.branches.push({p0: currentPosition.makeObj(), p1: newPosition.makeObj(), w: bWidth})
                     }
@@ -186,6 +188,11 @@ exports.Tree = function(
                     currentPosition.makeFromClone(currentState.p)
                     break
                 case '`':
+                    if (leafMode) {
+                        this.leaves.push(this.subleaf)
+                    } else {
+                        this.subleaf = []   
+                    }
                     leafMode = (!leafMode)
                     break
 
